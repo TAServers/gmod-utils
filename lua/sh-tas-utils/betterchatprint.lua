@@ -46,6 +46,7 @@ else
 			i = i + 1
 			if data[i] == "\0" then -- Handle buffer
 				if header[headerLoc] == "c" then
+					PrintTable(string.byte(buffer))
 					table.insert(args, Color(string.byte(buffer)))
 				elseif header[headerLoc] == "s" then
 					table.insert(args, buffer)
