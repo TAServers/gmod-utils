@@ -9,7 +9,10 @@ local names = {
 	"Surprise restarts",
 	"Powered by LinuxGSM",
 	"Overengineering addons",
-	"63charhostnamelimitwhy"
+	"63charhostnamelimitwhy",
+	"Under construction",
+	"Squashing bugs",
+	"StarfallEx > E2"
 }
 
 -- Verify name lengths
