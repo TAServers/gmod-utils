@@ -5,6 +5,7 @@ hook.Add("PlayerConnect", "TAS.JoinAndLeaveMsgs", function(name)
 end)
 
 hook.Add("PlayerSpawn", "TAS.JoinAndLeaveMsgs", function(plr)
+	-- TODO: Player team is invalid here, need a way to solve that
 	TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
 end)
 
