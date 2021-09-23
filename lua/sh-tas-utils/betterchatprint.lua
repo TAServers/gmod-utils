@@ -7,7 +7,7 @@ if SERVER then
 		for _, v in ipairs({...}) do
 			if IsColor(v) then
 				header = header .. "c"
-				body = body .. string.format("%c%c%c", v:Unpack())
+				body = body .. string.char(v:Unpack())
 			else
 				header = header .. "s"
 				body = body .. tostring(v) .. "\0"
