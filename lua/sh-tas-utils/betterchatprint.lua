@@ -1,39 +1,56 @@
 if SERVER then
 	util.AddNetworkString("TASUtils.ChatPrint")
 
+	-- Global caching
+	local _ipairs = ipairs
+	local string_char, _tostring = string.char, tostring
+	local _IsColor = IsColor
+	local util_Compress = util.Compress
+
+	local net_Start, net_WriteData, net_Send, net_Broadcast = net.Start, net.WriteData, net.Send, net.Broadcast
+
 	local function encodeMsgArgs(...)
 		local header = ""
 		local body = ""
-		for _, v in ipairs({...}) do
-			if IsColor(v) then
+		for _, v in _ipairs({...}) do
+			if _IsColor(v) then
 				header = header .. "c"
-				body = body .. string.char(v:Unpack())
+				body = body .. _string.char(v:Unpack())
 			else
 				header = header .. "s"
-				body = body .. tostring(v) .. "\0"
+				body = body .. _tostring(v) .. "\0"
 			end
 		end
 
-		return util.Compress(header .. "\0" .. body)
+		return _util.Compress(header .. "\0" .. body)
 	end
 
 	-- Takes a vararg of colours and things to print (each item must have a valid tostring metamethod present)
 	function TASUtils.Broadcast(...)
-		net.Start("TASUtils.ChatPrint")
-		net.WriteData(encodeMsgArgs(...))
-		net.Broadcast()
+		net_Start("TASUtils.ChatPrint")
+		net_WriteData(encodeMsgArgs(...))
+		net_Broadcast()
 	end
 
 	FindMetaTable("Player").ChatPrint = function(self, ...)
-		net.Start("TASUtils.ChatPrint")
-		net.WriteData(encodeMsgArgs(...))
-		net.Send(self)
+		net_Start("TASUtils.ChatPrint")
+		net_WriteData(encodeMsgArgs(...))
+		net_Send(self)
 	end
 else
+	-- Global caching
+	local util_Decompress = util.Decompress
+	local net_ReadData = net.ReadData
+	local _error, _unpack = error, unpack
+	local table_insert = table.insert
+	local _Color = Color
+	local string_byte = string.byte
+	local chat_AddText = chat.AddText
+
 	net.Receive("TASUtils.ChatPrint", function(len)
-		local data = util.Decompress(net.ReadData(len))
+		local data = util_Decompress(net_ReadData(len))
 		if not data then
-			error("Failed to decompress TASUtils.ChatPrint data")
+			_error("Failed to decompress TASUtils.ChatPrint data")
 			return
 		end
 
@@ -55,7 +72,7 @@ else
 		local args = {}
 		for i = 1, headerLen do
 			if header[i] == "c" then -- Colours
-				table.insert(args, Color(string.byte(data, dataPtr, dataPtr + 3)))
+				table_insert(args, Color(string.byte(data, dataPtr, dataPtr + 3)))
 				dataPtr = dataPtr + 4 -- Skip over the three colour values
 			elseif header[i] == "s" then -- Strings
 				local substring = ""
@@ -65,11 +82,11 @@ else
 				end
 				dataPtr = dataPtr + 1 -- Skip over null char
 
-				table.insert(args, substring)
+				table_insert(args, substring)
 			end
 		end
 
 		-- Display the parsed message
-		chat.AddText(unpack(args))
+		chat_AddText(_unpack(args))
 	end)
 end
