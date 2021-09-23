@@ -6,8 +6,10 @@ if SERVER then
 	end)
 
 	hook.Add("PlayerSpawn", "TAS.JoinAndLeaveMsgs", function(plr)
-		-- TODO: Player team is invalid here, need a way to solve that
-		TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
+		-- Single tick timer isn't the cleanest way to wait for ulx to set the player's team (cause it uses the same hook as this), but can't think of anything better rn
+		timer.Simple(0, function()
+			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
+		end)
 	end)
 
 	hook.Add("PlayerDisconnected", "TAS.JoinAndLeaveMsgs", function(plr)
