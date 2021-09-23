@@ -13,7 +13,7 @@ local names = {
 	"64 char hostname limit"
 }
 
--- Verify name lenghs
+-- Verify name lengths
 for _, name in ipairs(names) do
 	local length = #rootName:GetString() + #name
 	if length > 64 then
@@ -21,10 +21,13 @@ for _, name in ipairs(names) do
 	end
 end
 
-local function chooseName()
-	local choice = names[math.random(#names)]
-	RunConsoleCommand("hostname", rootName:GetString() .. choice)
-end
+local changeTime = CurTime()
+hook.Add("Think", "TAS.NameChanger", function()
+	local time = CurTime()
+	if time >= changeTime then
+		local choice = names[math.random(#names)]
+		RunConsoleCommand("hostname", rootName:GetString() .. choice)
 
-chooseName()
-timer.Create("TAS.NameChanger", delay:GetFloat(), 0, chooseName)
+		changeTime = time + delay:GetFloat()
+	end
+end)
