@@ -15,7 +15,7 @@ if SERVER then
 		for _, v in _ipairs({...}) do
 			if _IsColor(v) then
 				header = header .. "c"
-				body = body .. _string.char(v:Unpack())
+				body = body .. string_char(v:Unpack())
 			else
 				header = header .. "s"
 				body = body .. _tostring(v) .. "\0"
