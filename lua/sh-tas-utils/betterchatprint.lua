@@ -32,9 +32,9 @@ else
 		-- Parse header
 		local header, headerLen = "", 0
 		while true do
-			if data[i] == "\0" then break end
+			if data[dataPtr] == "\0" then break end
 
-			header = header .. data[i]
+			header = header .. data[dataPtr]
 			headerLen = headerLen + 1
 			dataPtr = dataPtr + 1
 		end
