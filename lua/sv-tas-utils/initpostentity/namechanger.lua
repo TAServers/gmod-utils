@@ -1,18 +1,25 @@
-local defaultName = "[TAS] Total Anarchy Server (Wire, StarfallEx, CSLua and more) | "
+local defaultName = "Total Anarchy Server [Wire|SfEx|CSLua] - "
 local rootName = CreateConVar("root_hostname", defaultName, FCVAR_ARCHIVE, "Server name to use before appending msg")
 local delay = CreateConVar("hostname_change_delay", 300, FCVAR_ARCHIVE, "Time to wait before changing hostname", 1)
 
+--	"-----------------------"  How long one of these entries can be assuming we're using the default name above
 local names = {
 	"Site under construction",
-	"PotatoOS has probably broken the relay again",
 	"Better than s&box",
 	"Complaining about Lua",
-	"No crashes, just surprise restarts",
-	"Yes we're a programming server",
-	"Advancing the field of GMod light transport solutions",
+	"Surprise restarts",
 	"Powered by LinuxGSM",
-	"Overengineering addons"
+	"Overengineering addons",
+	"64 char hostname limit"
 }
+
+-- Verify name lenghs
+for _, name in ipairs(names) do
+	local length = #rootName:GetString() + #name
+	if length > 64 then
+		print(string.format("WARNING | Name %s is %i longer than the maximum number of characters allowed", name, length - 64))
+	end
+end
 
 local function chooseName()
 	local choice = names[math.random(#names)]
