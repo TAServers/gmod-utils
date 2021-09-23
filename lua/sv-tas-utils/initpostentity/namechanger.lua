@@ -9,7 +9,9 @@ local names = {
 	"Complaining about Lua",
 	"No crashes, just surprise restarts",
 	"Yes we're a programming server",
-	"Advancing the field of GMod light transport solutions"
+	"Advancing the field of GMod light transport solutions",
+	"Powered by LinuxGSM",
+	"Overengineering addons"
 }
 
 local function chooseName()
