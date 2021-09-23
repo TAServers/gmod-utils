@@ -55,8 +55,8 @@ else
 		local args = {}
 		for i = 1, headerLen do
 			if header[i] == "c" then -- Colours
-				table.insert(args, Color(string.byte(data, dataPtr, dataPtr + 2)))
-				dataPtr = dataPtr + 3 -- Skip over the three colour values
+				table.insert(args, Color(string.byte(data, dataPtr, dataPtr + 3)))
+				dataPtr = dataPtr + 4 -- Skip over the three colour values
 			elseif header[i] == "s" then -- Strings
 				local substring = ""
 				while data[dataPtr] ~= "\0" do
