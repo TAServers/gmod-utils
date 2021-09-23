@@ -2,7 +2,7 @@ if SERVER then
 	util.AddNetworkString("TASUtils.ChatPrint")
 
 	-- Takes a vararg of colours and things to print (each item must have a valid tostring present)
-	function TASUtils.ChatPrint(...)
+	function TASUtils.Broadcast(...)
 		local header = ""
 		local body = ""
 		for _, v in ipairs({...}) do
