@@ -1,35 +1,46 @@
+TASUtils = {}
+
 if SERVER then
 	AddCSLuaFile()
 
-	-- Load everything from tas utils for serverside
-	for _, filename in ipairs(file.Find("sv-tas-utils/*.lua", "LUA")) do
-		pcall(include, "sv-tas-utils/" .. filename)
-	end
+	-- Paths to include/addcsluafile (each one should have an initpostentity folder for any code to run after autorun)
+	local paths = {
+		["sv-tas-utils"] = function(path) pcall(include, path) end,
+		["sh-tas-utils"] = function(path) pcall(include, path) AddCSLuaFile(path) end,
+		["cl-tas-utils"] = function(path) AddCSLuaFile(path) end
+	}
 
-	hook.Add("InitPostEntity", "TAS.PostAutorunIncludes", function()
-		for _, filename in ipairs(file.Find("sv-tas-utils/initpostentity/*.lua", "LUA")) do
-			pcall(include, "sv-tas-utils/initpostentity/" .. filename)
+	-- Load
+	for path, func in pairs(paths) do
+		for _, filename in ipairs(file.Find(path .. "/*.lua", "LUA")) do
+			func(path .. "/" .. filename)
 		end
-		hook.Remove("InitPostEntity", "TAS.PostAutorunIncludes")
-	end)
 
-	-- AddCSLuaFile everything from tas utils for clientside
-	for _, filename in ipairs(file.Find("cl-tas-utils/*.lua", "LUA")) do
-		AddCSLuaFile("cl-tas-utils/" .. filename)
-	end
-	for _, filename in ipairs(file.Find("cl-tas-utils/initpostentity/*.lua", "LUA")) do
-		AddCSLuaFile("cl-tas-utils/initpostentity/" .. filename)
+		hook.Add("InitPostEntity", "TAS.PostAutorunIncludes." .. path, function()
+			for _, filename in ipairs(file.Find(path .. "/initpostentity/*.lua", "LUA")) do
+				func(path .. "/initpostentity/" .. filename)
+			end
+			hook.Remove("InitPostEntity", "TAS.PostAutorunIncludes." .. path)
+		end)
 	end
 else
-	-- Load everything from tas utils for clientside
-	for _, filename in ipairs(file.Find("cl-tas-utils/*.lua", "LUA")) do
-		pcall(include, "cl-tas-utils/" .. filename)
-	end
+	-- Paths to include/addcsluafile (each one should have an initpostentity folder for any code to run after autorun)
+	local paths = {
+		["sh-tas-utils"] = function(path) pcall(include, path) end,
+		["cl-tas-utils"] = function(path) pcall(include, path) end
+	}
 
-	hook.Add("InitPostEntity", "TAS.PostAutorunIncludes", function()
-		for _, filename in ipairs(file.Find("cl-tas-utils/initpostentity/*.lua", "LUA")) do
-			pcall(include, "cl-tas-utils/initpostentity/" .. filename)
+	-- Load
+	for path, func in pairs(paths) do
+		for _, filename in ipairs(file.Find(path .. "/*.lua", "LUA")) do
+			func(path .. "/" .. filename)
 		end
-		hook.Remove("InitPostEntity", "TAS.PostAutorunIncludes")
-	end)
+
+		hook.Add("InitPostEntity", "TAS.PostAutorunIncludes." .. path, function()
+			for _, filename in ipairs(file.Find(path .. "/initpostentity/*.lua", "LUA")) do
+				func(path .. "/initpostentity/" .. filename)
+			end
+			hook.Remove("InitPostEntity", "TAS.PostAutorunIncludes." .. path)
+		end)
+	end
 end
