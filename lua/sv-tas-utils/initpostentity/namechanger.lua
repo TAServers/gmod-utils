@@ -16,7 +16,7 @@ local names = {
 for _, name in ipairs(names) do
 	local length = #rootName:GetString() + #name
 	if length > 63 then
-		print(string.format("WARNING | Name %s is %i longer than the maximum number of characters allowed", name, length - 64))
+		print(string.format("WARNING | Name %s is %i longer than the maximum number of characters allowed", name, length - 63))
 	end
 end
 
