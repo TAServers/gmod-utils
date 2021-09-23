@@ -1,8 +1,7 @@
 if SERVER then
 	util.AddNetworkString("TASUtils.ChatPrint")
 
-	-- Takes a vararg of colours and things to print (each item must have a valid tostring present)
-	function TASUtils.Broadcast(...)
+	local function encodeMsgArgs(...)
 		local header = ""
 		local body = ""
 		for _, v in ipairs({...}) do
@@ -15,9 +14,20 @@ if SERVER then
 			end
 		end
 
+		return util.Compress(header .. "\0" .. body)
+	end
+
+	-- Takes a vararg of colours and things to print (each item must have a valid tostring metamethod present)
+	function TASUtils.Broadcast(...)
 		net.Start("TASUtils.ChatPrint")
-		net.WriteData(util.Compress(header .. "\0" .. body))
+		net.WriteData(encodeMsgArgs(...))
 		net.Broadcast()
+	end
+
+	FindMetaTable("Player").ChatPrint = function(self, ...)
+		net.Start("TASUtils.ChatPrint")
+		net.WriteData(encodeMsgArgs(...))
+		net.Send(self)
 	end
 else
 	net.Receive("TASUtils.ChatPrint", function(len)
