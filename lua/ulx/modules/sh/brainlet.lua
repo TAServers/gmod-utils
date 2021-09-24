@@ -95,7 +95,7 @@ if SERVER then
 
 			-- Log that a brainlet was initiated
 			ulx.fancyLogAdmin(caller, "#A is testing if #T is a brainlet", target)
-		end, 1, category, difficulty)
+		end, 1, opentdb.Category[category], opentdb.Difficulty[difficulty])
 	end
 end
 
