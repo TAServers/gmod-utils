@@ -12,7 +12,9 @@ local names = {
 	"63charhostnamelimitwhy",
 	"Under construction",
 	"Squashing bugs",
-	"StarfallEx > E2"
+	"StarfallEx > E2",
+	"We're popular now?",
+	"100% furry free"
 }
 
 -- Verify name lengths
