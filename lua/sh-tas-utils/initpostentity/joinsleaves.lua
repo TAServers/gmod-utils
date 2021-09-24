@@ -10,7 +10,7 @@ if SERVER then
 		timer.Simple(0, function()
 			if IsValid(plr) then -- if this is invalid they joined and left in a single tick
 				TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
-			else
+			end
 		end)
 	end)
 

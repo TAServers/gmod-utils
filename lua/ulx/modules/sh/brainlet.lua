@@ -36,7 +36,7 @@ if SERVER then
 				Color(77, 255, 80), outstandingBrainlets[plr].answer,
 				Color(255, 255, 255), "\", but they answered \"",
 				Color(255, 91, 77), answer,
-				Color(255, 255, 255), "\"",
+				Color(255, 255, 255), "\""
 			)
 			ULib.kick(plr, "You are officially a dumbass")
 		end
