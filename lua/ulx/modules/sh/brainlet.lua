@@ -1,68 +1,102 @@
-local opentdb = {
-	Difficulty = {
-		Easy = "easy",
-		Medium = "medium",
-		Hard = "hard"
-	},
-	Category = {
-		GeneralKnowledge = 9,
-		Books = 10,
-		Film = 11,
-		Music = 12,
-		Theatre = 13,
-		Television = 14,
-		VideoGames = 15,
-		BoardGames = 16,
-		ScienceAndNature = 17,
-		Computers = 18,
-		Mathematics = 19,
-		Mythology = 20,
-		Sports = 21,
-		Geography = 22,
-		History = 23,
-		Politics = 24,
-		Art = 25,
-		Celebrities = 26,
-		Animals = 27,
-		Vehicles = 28,
-		Comics = 29,
-		Gadgets = 30,
-		AnimeAndManga = 31,
-		Animations = 32
-	}
-}
+local opentdb = TASUtils.OpenTDB
+if not opentdb then error("ULX loads modules before TASUtils") end
+local brainlet = function() end
 
 if SERVER then
-	-- Fetch questions from the api (callback should take success: bool, questions: table)
-	function opentdb.fetchQuestions(callback, amount, category, difficulty)
-		amount = amount or 1
-		category = category or opentdb.Category.GeneralKnowledge
-		difficulty = difficulty or opentdb.Difficulty.Easy
+	util.AddNetworkString("TASUtils.Brainlet")
+	local questionTime = CreateConVar("brainlet_time", 30, FCVAR_ARCHIVE, "Number of seconds users get to answer a question", 1)
+	local outstandingBrainlets = {}
 
-		-- TODO: Implement a locally stored trivia dataset fallback
-		http.Fetch(
-			string.format("https://opentdb.com/api.php?amount=%i&category=%i&difficulty=%s", amount, category, difficulty),
-			function(body, size, headers, statusCode)
-				if statusCode != 200 then callback(false, {}) end
+	-- Invalidate and apply brainlets
+	hook.Add("Think", "TASUtils.Brainlet", function()
+		local curtime = CurTime()
+		for plr, question in pairs(outstandingBrainlets) do
+			if not IsValid(plr) then -- If the player is invalid remove their brainlet
+				outstandingBrainlets[plr] = nil
+			elseif curtime >= question.deadline then -- They've failed to answer the brainlet in time
+				outstandingBrainlets[plr] = nil
+				TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " failed to answer the brainlet in time")
+				ULib.kick(plr, "You are officially a dumbass")
+			end
+		end
+	end)
 
-				body = util.JSONToTable(body)
-				if body["response_code"] != 0 then callback(false, {}) end
+	net.Receive("TASUtils.Brainlet", function(_, plr)
+		if not outstandingBrainlets[plr] then return end
 
-				callback(true, body.results)
-			end,
-			function() callback(false, {}) end
-		)
+		local answer = net.ReadString()
+		if answer == outstandingBrainlets[plr].answer then
+			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " correctly answered the brainlet!")
+		else
+			TASUtils.Broadcast(
+				team.GetColor(plr:Team()), plr:Nick(),
+				Color(255, 255, 255), " incorrectly answered the brainlet \"",
+				Color(240, 224, 86), outstandingBrainlets[plr].question,
+				Color(255, 255, 255), "\", the right answer was \"",
+				Color(77, 255, 80), outstandingBrainlets[plr].answer,
+				Color(255, 255, 255), "\", but they answered \"",
+				Color(255, 91, 77), answer,
+				Color(255, 255, 255), "\"",
+			)
+			ULib.kick(plr, "You are officially a dumbass")
+		end
+
+		outstandingBrainlets[plr] = nil
+	end)
+
+	brainlet = function(caller, target, category, difficulty)
+		if CLIENT then return end -- Seems ULX commands only run serverside, but just incase
+
+		if outstandingBrainlets[target] then
+			caller:ChatPrint("That player is already being brainlet'd")
+			return
+		end
+
+		-- Fetch question from trivia API/dataset
+		opentdb.FetchQuestions(function(success, questions)
+			-- Check the request was successful
+			if not success or #questions == 0 then
+				caller:ChatPrint("Failed to get a question from the OpenTDB API")
+				return
+			end
+
+			local question = questions[1]
+			local deadline = CurTime() + questionTime:GetFloat()
+
+			-- Register brainlet (tracked serverside so without svlua there's literally no way to bypass, unlike a certain server's brainlet :trollhd:)
+			outstandingBrainlets[target] = {
+				answer = question.correct_answer,
+				deadline = deadline
+			}
+
+			-- Send question to target client to be answered
+			-- Packet schema:
+			-- category           : string
+			-- difficulty         : string
+			-- question           : string
+			-- correctAnswer      : string
+			-- numIncorrectAnswers: uint8
+			-- incorrectAnswers   : string[numIncorrectAnswers]
+			-- deadline           : float
+			net.Start("TASUtils.Brainlet")
+				net.WriteString(question.category)
+				net.WriteString(question.difficulty)
+				net.WriteString(question.question)
+				net.WriteString(question.correct_answer)
+
+				local numIncorrectAnswers = #question.incorrect_answers
+				net.WriteUInt(numIncorrectAnswers, 8)
+				for i = 1, numIncorrectAnswers do
+					net.WriteString(question.incorrect_answers[i])
+				end
+
+				net.WriteFloat(deadline) -- Note this isn't used for validation, just the timer GUI
+			net.Send(target)
+
+			-- Log that a brainlet was initiated
+			ulx.fancyLogAdmin(caller, "#A is testing if #T is a brainlet", target)
+		end, 1, category, difficulty)
 	end
-end
-
-local function brainlet(caller, target, category, difficulty)
-	print(string.format("Caller: %s, Target: %s, Category %s, Difficulty %s", caller, target, category, difficulty))
-
-	-- Fetch question from trivia API/dataset
-
-	-- Send question to target client
-
-	-- Log that a brainlet was initiated
 end
 
 -- Register CMD

@@ -8,7 +8,9 @@ if SERVER then
 	hook.Add("PlayerInitialSpawn", "TAS.JoinAndLeaveMsgs", function(plr)
 		-- Single tick timer isn't the cleanest way to wait for ulx to set the player's team (cause it uses the same hook as this), but can't think of anything better rn
 		timer.Simple(0, function()
-			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
+			if IsValid(plr) then -- if this is invalid they joined and left in a single tick
+				TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), fontColour, " just joined the server")
+			else
 		end)
 	end)
 
