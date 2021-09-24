@@ -22,7 +22,7 @@ if SERVER then
 			end
 		end
 
-		return _util.Compress(header .. "\0" .. body)
+		return util_Compress(header .. "\0" .. body)
 	end
 
 	-- Takes a vararg of colours and things to print (each item must have a valid tostring metamethod present)
@@ -72,7 +72,7 @@ else
 		local args = {}
 		for i = 1, headerLen do
 			if header[i] == "c" then -- Colours
-				table_insert(args, Color(string.byte(data, dataPtr, dataPtr + 3)))
+				table_insert(args, _Color(string_byte(data, dataPtr, dataPtr + 3)))
 				dataPtr = dataPtr + 4 -- Skip over the three colour values
 			elseif header[i] == "s" then -- Strings
 				local substring = ""
