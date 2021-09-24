@@ -71,23 +71,34 @@ if SERVER then
 
 			-- Send question to target client to be answered
 			-- Packet schema:
-			-- category           : string
-			-- difficulty         : string
-			-- question           : string
-			-- correctAnswer      : string
-			-- numIncorrectAnswers: uint8
-			-- incorrectAnswers   : string[numIncorrectAnswers]
-			-- deadline           : float
+			-- category               : string
+			-- difficulty             : string
+			-- question               : string
+			-- multipleChoice         : bool
+			-- if multipleChoice:
+			--     correctAnswer      : string
+			--     numIncorrectAnswers: uint8
+			--     incorrectAnswers   : string[numIncorrectAnswers]
+			-- else
+			--     correctAnswer      : bool
+			-- deadline               : float
 			net.Start("TASUtils.Brainlet")
 				net.WriteString(question.category)
 				net.WriteString(question.difficulty)
 				net.WriteString(question.question)
-				net.WriteString(question.correct_answer)
 
-				local numIncorrectAnswers = #question.incorrect_answers
-				net.WriteUInt(numIncorrectAnswers, 8)
-				for i = 1, numIncorrectAnswers do
-					net.WriteString(question.incorrect_answers[i])
+				if question.type == "multiple" then
+					net.WriteBool(true)
+					net.WriteString(question.correct_answer)
+
+					local numIncorrectAnswers = #question.incorrect_answers
+					net.WriteUInt(numIncorrectAnswers, 8)
+					for i = 1, numIncorrectAnswers do
+						net.WriteString(question.incorrect_answers[i])
+					end
+				else
+					net.WriteBool(false)
+					net.WriteBool(question.correct_answer == "True")
 				end
 
 				net.WriteFloat(deadline) -- Note this isn't used for validation, just the timer GUI
@@ -97,6 +108,29 @@ if SERVER then
 			ulx.fancyLogAdmin(caller, "#A is testing if #T is a brainlet", target)
 		end, 1, opentdb.Category[category], opentdb.Difficulty[difficulty])
 	end
+else
+	net.Receive("TASUtils.Brainlet", function()
+		-- Read packet
+		local category = net.ReadString()
+		local difficulty = net.ReadString()
+		local question = net.ReadString()
+
+		local correctAnswer, answers = nil, {}
+		if net.ReadBool() then -- Multiple choice
+			for i = 1, net.ReadUInt(8) do
+				answers[i] = net.ReadString()
+			end
+			answers[#answers + 1] = correctAnswer
+			TASUtils.ShuffleTable(answers) -- Shuffle the table so the correct answer is always in a random position
+		else -- True/False
+			correctAnswer = net.ReadBool()
+			answers = {"True", "False"}
+		end
+
+		local deadline = net.ReadFloat()
+
+		-- Create the GUI window for brainlet (for testing this can literally just be a plain derma window)
+	end)
 end
 
 -- Register CMD
