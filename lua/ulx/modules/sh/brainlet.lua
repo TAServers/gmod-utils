@@ -143,7 +143,7 @@ else
 
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
-		html:OpenURL("http://www.tasservers.com/gmod/utils/brainlet.html")
+		html:OpenURL(BRANCH == "chromium" and "http://www.tasservers.com/gmod/utils/brainlet.html" or "http://www.tasservers.com/gmod/utils/brainlet_nochromium.html")
 		html:Refresh(true)
 
 		local refreshed = false

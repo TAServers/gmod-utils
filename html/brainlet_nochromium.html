@@ -6,6 +6,13 @@
 	<title>Brainlet</title>
 
 	<style>
+		/*
+		* Prefixed by https://autoprefixer.github.io
+		* PostCSS: v8.3.6,
+		* Autoprefixer: v10.3.1
+		* Browsers: last 4 version
+		*/
+
 		:root {
 			--primary: #222629;
 			--secondary: #f07b16;
@@ -28,8 +35,15 @@
 			letter-spacing: 0.1em;
 			text-shadow: -2px 2px 8px rgba(34, 38, 41, 0.25);
 
+			display: -webkit-box;
+
+			display: -ms-flexbox;
+
 			display: flex;
-			flex-direction: column;
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+				-ms-flex-direction: column;
+					flex-direction: column;
 
 			width: 100vw;
 			height: 100vh;
@@ -46,12 +60,15 @@
 
 		#question {
 			padding: 0% 5% 0% 5%;
+			display: -ms-grid;
 			display: grid;
 		}
 
 		#question span {
-			grid-column-start: 1;
-			grid-row-start: 1;
+			-ms-grid-column: 1;
+				grid-column-start: 1;
+			-ms-grid-row: 1;
+				grid-row-start: 1;
 
 			margin: 16px;
 			margin-left: 6px;
@@ -60,8 +77,14 @@
 
 			color: var(--accent-text);
 
+			display: -webkit-inline-box;
+
+			display: -ms-inline-flexbox;
+
 			display: inline-flex;
-			align-items: center;
+			-webkit-box-align: center;
+				-ms-flex-align: center;
+					align-items: center;
 			text-align: center;
 		}
 
@@ -70,8 +93,11 @@
 			-moz-appearance: none;
 			appearance: none;
 
-			grid-column-start: 1;
-			grid-row-start: 1;
+			-ms-grid-column: 1;
+
+				grid-column-start: 1;
+			-ms-grid-row: 1;
+				grid-row-start: 1;
 
 			width: 100%;
 			height: 30vh;
@@ -83,7 +109,8 @@
 			border-radius: 10px;
 
 			background: var(--timer-background);
-			box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
+			-webkit-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
+					box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
 		}
 		progress::-webkit-progress-value {
 			border: 0;
@@ -91,22 +118,35 @@
 
 			background: var(--accent);
 
-			box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+			-webkit-box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+						0 0 5px var(--accent);
+
+					box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
 						0 0 5px var(--accent);
 
 			border: 1px solid var(--accent);
 		}
 
 		#answers {
+			display: -webkit-box;
+			display: -ms-flexbox;
 			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
+			-webkit-box-orient: horizontal;
+			-webkit-box-direction: normal;
+				-ms-flex-direction: row;
+					flex-direction: row;
+			-ms-flex-wrap: wrap;
+				flex-wrap: wrap;
 
 			margin: 16px;
 
 			height: 100%;
 
-			justify-content: center;
+			-webkit-box-pack: center;
+
+				-ms-flex-pack: center;
+
+					justify-content: center;
 		}
 
 		button {
@@ -121,24 +161,30 @@
 			margin: 16px;
 			padding: 8px;
 			min-width: 15em;
-			flex: 1;
+			-webkit-box-flex: 1;
+				-ms-flex: 1;
+					flex: 1;
 
 			min-height: 3em;
 			max-height: 10em;
 
 			outline: none;
 
-			box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+			-webkit-box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+						-2px 2px 28px 0px rgba(0, 0, 0, 0.5);
+
+					box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
 						-2px 2px 28px 0px rgba(0, 0, 0, 0.5);
 		}
 		button:hover {
-			filter: brightness(110%);
-			box-shadow: 0 0 5px var(--accent);
+			-webkit-filter: brightness(110%);
+					filter: brightness(110%);
+			-webkit-box-shadow: 0 0 5px var(--accent);
+					box-shadow: 0 0 5px var(--accent);
 		}
 		button:active {
-			filter: brightness(90%);
-			box-shadow: inset 20px 20px 60px #b25200,
-						inset -20px -20px 60px #f07000;
+			-webkit-filter: brightness(90%);
+					filter: brightness(90%);
 		}
 	</style>
 </head>
