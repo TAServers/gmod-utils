@@ -4,7 +4,7 @@ local brainlet = function() end
 
 if SERVER then
 	util.AddNetworkString("TASUtils.Brainlet")
-	resource.AddSingleFile('html/brainlet.html')
+	resource.AddSingleFile('addons/taservers-gmod-utils/html/brainlet.html')
 
 	local questionTime = CreateConVar("brainlet_time", 30, FCVAR_ARCHIVE, "Number of seconds users get to answer a question", 1)
 	local outstandingBrainlets = {}
