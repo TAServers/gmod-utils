@@ -47,17 +47,6 @@ function opentdb.FetchQuestions(callback, amount, category, difficulty)
 			body = util.JSONToTable(body)
 			if body.response_code != 0 then callback(false, {}) end
 
-			for _, result in ipairs(body.results) do
-				for k, v in pairs(result) do
-					if k ~= "incorrect_answers" then
-						result[k] = util.Base64Decode(v)
-					end
-					for i, answer in ipairs(result.incorrect_answers) do
-						result.incorrect_answers[i] = util.Base64Decode(answer)
-					end
-				end
-			end
-
 			callback(true, body.results)
 		end,
 		function() callback(false, {}) end

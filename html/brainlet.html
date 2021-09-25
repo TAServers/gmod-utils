@@ -160,7 +160,7 @@
 		}
 
 		function setTimer(val) {
-			document.getElementById("question").children[0].setAttribute("value", val.toString());
+			document.getElementById("question").children[0].setAttribute("value", val);
 		}
 
 		function init(category, difficulty, question, timeLeft) {
@@ -168,6 +168,10 @@
 			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
 			document.getElementById("question").children[0].setAttribute("value", timeLeft.toString());
 			document.getElementById("question").children[1].innerText = question;
+
+			setInterval(function() {
+				setTimer(brainlet.getTimeLeft());
+			}, 50);
 		}
 	</script>
 </body>

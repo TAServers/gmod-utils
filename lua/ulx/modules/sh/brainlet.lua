@@ -152,6 +152,9 @@ else
 			net.SendToServer()
 			frame:Remove()
 		end)
+		html:AddFunction("brainlet", "getTimeLeft", function()
+			return tostring(deadline - CurTime())
+		end)
 
 		html:Call(string.format(
 			'init("%s", "%s", "%s", %s);',
@@ -166,10 +169,6 @@ else
 				'addButton("%s")',
 				answer
 			))
-		end
-
-		function html:Think()
-			html:Call(string.format('setTimer("%s");', deadline - CurTime()))
 		end
 
 		frame:MakePopup()
