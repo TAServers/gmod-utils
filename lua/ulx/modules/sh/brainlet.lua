@@ -108,6 +108,9 @@ if SERVER then
 		end, 1, opentdb.Category[category], opentdb.Difficulty[difficulty])
 	end
 else
+	local windowWidth = CreateConVar("brainlet_window_w", 0.6, FCVAR_ARCHIVE, "Width of the brainlet window (as a percentage of your screen res)", 0.1, 0.9)
+	local windowHeight = CreateConVar("brainlet_window_h", 0.6, FCVAR_ARCHIVE, "Height of the brainlet window (as a percentage of your screen res)", 0.1, 0.9)
+
 	-- Even if someone goes in and removes the netmsg receiver clientside, they'll still get timed out by the server
 	net.Receive("TASUtils.Brainlet", function()
 		-- Read packet
@@ -130,10 +133,9 @@ else
 		-- Create the GUI window for brainlet
 		local frame = vgui.Create("DFrame")
 		local scrw, scrh = ScrW(), ScrH() -- Cache screen dimensions
-		width, height = math.Clamp(width, 0, 1), math.Clamp(height, 0, 1)
 
-		frame:SetPos((0.5 - width / 2) * scrw, (0.5 - height / 2) * scrh)
-		frame:SetSize(width * scrw, height * scrh)
+		frame:SetPos((0.5 - windowWidth / 2) * scrw, (0.5 - windowHeight / 2) * scrh)
+		frame:SetSize(windowWidth * scrw, windowHeight * scrh)
 		frame:SetTitle("Brainlet")
 		frame:SetVisible(true)
 		frame:SetDraggable(false)
