@@ -12,7 +12,7 @@ local function cleanupLogic(calling_ply, targets)
         end
     end
 
-    ulx.fancyLogAdmin(calling_ply, "#A cleaned up #T's props")
+    ulx.fancyLogAdmin(calling_ply, "#A cleaned up #T's props", targets)
 end
 
 local cleanupCmd = ulx.command(CATEGORY, "ulx cleanup", cleanupLogic, "!cleanup")
