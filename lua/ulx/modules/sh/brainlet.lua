@@ -4,8 +4,6 @@ local brainlet = function() end
 
 if SERVER then
 	util.AddNetworkString("TASUtils.Brainlet")
-	resource.AddSingleFile('addons/taservers-gmod-utils/html/brainlet.html')
-
 	local questionTime = CreateConVar("brainlet_time", 30, FCVAR_ARCHIVE, "Number of seconds users get to answer a question", 1)
 	local outstandingBrainlets = {}
 
@@ -106,7 +104,7 @@ if SERVER then
 			net.Send(target)
 
 			-- Log that a brainlet was initiated
-			ulx.fancyLogAdmin(caller, "#A is testing if #T is a brainlet", target)
+			ulx.fancyLogAdmin(caller, "#A is testing the intelligence of #T", target)
 		end, 1, opentdb.Category[category], opentdb.Difficulty[difficulty])
 	end
 else
@@ -146,7 +144,7 @@ else
 
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
-		html:OpenURL("asset://garrysmod/html/brainlet.html")
+		html:OpenURL("http://www.tasservers.com/gmod/utils/brainlet.html")
 
 		html:AddFunction("brainlet", "onClick", function(answer)
 			net.Start("TASUtils.Brainlet")
