@@ -165,14 +165,15 @@
 
 		function init(category, difficulty, question, timeLeft) {
 			document.getElementById("title").innerHTML = `${category}: ${difficulty}`;
-			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
-			document.getElementById("question").children[0].setAttribute("value", timeLeft.toString());
 			document.getElementById("question").children[1].innerHTML = question;
+			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
+			setTimer(timeLeft);
 
 			const startTime = Date.getTime();
 
 			setInterval(function() {
-				setTimer(timeLeft - (Date.getTime() - startTime) / 1000);
+				timeLeft -= 0.05;
+				setTimer(timeLeft);
 			}, 50)
 		}
 	</script>
