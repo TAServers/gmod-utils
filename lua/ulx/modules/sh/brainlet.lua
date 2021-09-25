@@ -45,8 +45,6 @@ if SERVER then
 	end)
 
 	brainlet = function(caller, target, category, difficulty)
-		if CLIENT then return end -- Seems ULX commands only run serverside, but just incase
-
 		if outstandingBrainlets[target] then
 			caller:ChatPrint("That player is already being brainlet'd")
 			return
