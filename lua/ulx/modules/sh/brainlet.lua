@@ -63,7 +63,7 @@ if SERVER then
 
 			-- Register brainlet (tracked serverside so without svlua there's literally no way to bypass, unlike a certain server's brainlet :trollhd:)
 			outstandingBrainlets[target] = {
-				question = question,
+				question = question.question,
 				answer = question.correct_answer,
 				deadline = deadline
 			}
@@ -153,9 +153,10 @@ else
 				net.SendToServer()
 				frame:Remove()
 			end)
-			html:AddFunction("brainlet", "getTimeLeft", function()
-				return deadline - CurTime()
-			end)
+
+			function html:Think()
+				html:Call(string.format("time = %d;", deadline - CurTime()))
+			end
 
 			html:Call(string.format(
 				'init("%s", "%s", "%s", %d);',
