@@ -28,14 +28,15 @@ if SERVER then
 		if answer == outstandingBrainlets[plr].answer then
 			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " correctly answered the brainlet!")
 		else
+			print(outstandingBrainlets[plr].question)
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
 				Color(255, 255, 255), " incorrectly answered the brainlet \"",
-				Color(240, 224, 86), outstandingBrainlets[plr].question,
+				--Color(240, 224, 86), outstandingBrainlets[plr].question,
 				Color(255, 255, 255), "\", the right answer was \"",
-				Color(77, 255, 80), outstandingBrainlets[plr].answer,
+				--Color(77, 255, 80), outstandingBrainlets[plr].answer,
 				Color(255, 255, 255), "\", but they answered \"",
-				Color(255, 91, 77), answer,
+				--Color(255, 91, 77), answer,
 				Color(255, 255, 255), "\""
 			)
 			ULib.kick(plr, "You are officially a dumbass")
@@ -143,33 +144,36 @@ else
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
 		html:OpenURL("http://www.tasservers.com/gmod/utils/brainlet.html")
+		html:Refresh(true)
 
-		html:AddFunction("brainlet", "onClick", function(answer)
-			net.Start("TASUtils.Brainlet")
-			net.WriteString(answer)
-			net.SendToServer()
-			frame:Remove()
-		end)
-		html:AddFunction("brainlet", "getTimeLeft", function()
-			return tostring(deadline - CurTime())
-		end)
+		function html:OnDocumentReady()
+			html:AddFunction("brainlet", "onClick", function(answer)
+				net.Start("TASUtils.Brainlet")
+				net.WriteString(answer)
+				net.SendToServer()
+				frame:Remove()
+			end)
+			html:AddFunction("brainlet", "getTimeLeft", function()
+				return tostring(deadline - CurTime())
+			end)
 
-		html:Call(string.format(
-			'init("%s", "%s", "%s", %s);',
-			category,
-			difficulty,
-			question,
-			deadline - CurTime()
-		))
-
-		for _, answer in ipairs(answers) do
 			html:Call(string.format(
-				'addButton("%s")',
-				answer
+				'init("%s", "%s", "%s", %s);',
+				category,
+				difficulty,
+				question,
+				deadline - CurTime()
 			))
-		end
 
-		frame:MakePopup()
+			for _, answer in ipairs(answers) do
+				html:Call(string.format(
+					'addButton("%s")',
+					answer
+				))
+			end
+
+			frame:MakePopup()
+		end
 	end)
 end
 
