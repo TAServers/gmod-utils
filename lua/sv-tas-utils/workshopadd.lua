@@ -8,7 +8,9 @@ local addons = {
     "878962980",
     "1490124474",
     "1676032134",
-    "1429966932"
+    "1429966932",
+    "415143062", -- TFA Base
+    "866368346" -- TFA Ins Shared Parts
 }
 
 for _, id in pairs(addons) do
