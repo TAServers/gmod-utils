@@ -28,7 +28,6 @@ if SERVER then
 		if answer == outstandingBrainlets[plr].answer then
 			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " correctly answered the brainlet!")
 		else
-			print(outstandingBrainlets[plr].question)
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
 				Color(255, 255, 255), " incorrectly answered the brainlet \"",
