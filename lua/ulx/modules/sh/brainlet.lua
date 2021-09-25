@@ -143,6 +143,7 @@ else
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
 		html:OpenURL("http://www.tasservers.com/gmod/utils/brainlet.html")
+		html:Refresh(true)
 
 		html:AddFunction("brainlet", "onClick", function(answer)
 			net.Start("TASUtils.Brainlet")
