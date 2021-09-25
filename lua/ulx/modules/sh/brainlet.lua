@@ -145,15 +145,8 @@ else
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
 		html:OpenURL(BRANCH == "chromium" and "http://www.tasservers.com/gmod/utils/brainlet.html" or "http://www.tasservers.com/gmod/utils/brainlet_nochromium.html")
-		html:Refresh(true)
 
-		local refreshed = false
-		function html:OnDocumentReady()
-			if not refreshed then
-				refreshed = true
-				return
-			end
-
+		html:AddFunction("brainlet", "loaded", function()
 			html:AddFunction("brainlet", "onClick", function(answer)
 				net.Start("TASUtils.Brainlet")
 				net.WriteString(answer)
@@ -175,9 +168,9 @@ else
 					answer
 				))
 			end
+		end)
 
-			frame:MakePopup()
-		end
+		frame:MakePopup()
 	end)
 end
 
