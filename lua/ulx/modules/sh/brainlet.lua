@@ -140,6 +140,7 @@ else
 		frame:SetVisible(true)
 		frame:SetDraggable(false)
 		frame:ShowCloseButton(false)
+		function frame:Paint() end
 
 		local html = vgui.Create("DHTML", frame)
 		html:Dock(FILL)
