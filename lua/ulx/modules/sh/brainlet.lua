@@ -154,11 +154,11 @@ else
 				frame:Remove()
 			end)
 			html:AddFunction("brainlet", "getTimeLeft", function()
-				return tostring(deadline - CurTime())
+				return deadline - CurTime()
 			end)
 
 			html:Call(string.format(
-				'init("%s", "%s", "%s", %s);',
+				'init("%s", "%s", "%s", %d);',
 				category,
 				difficulty,
 				question,
