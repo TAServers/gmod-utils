@@ -1,7 +1,7 @@
 -- Adds a cleanup command using NADMOD
 local CATEGORY = "TAS Utilities" -- Really should be exposed in TASUtils as a constant
 
-if NADMOD == nil then
+if SERVER and NADMOD == nil then
     ErrorNoHalt("Couldn't create the cleanup command! (NO NADMOD!)")
 end
 
