@@ -154,7 +154,7 @@
 	<script>
 		function addButton(name) {
 			let answer = document.createElement("button");
-			answer.innerText = name;
+			answer.innerHTML = name;
 			answer.setAttribute("onclick", "brainlet.onClick(\"" + name + "\")");
 			document.getElementById("answers").appendChild(answer);
 		}
@@ -164,10 +164,10 @@
 		}
 
 		function init(category, difficulty, question, timeLeft) {
-			document.getElementById("title").innerText = `${category}: ${difficulty}`;
+			document.getElementById("title").innerHTML = `${category}: ${difficulty}`;
 			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
 			document.getElementById("question").children[0].setAttribute("value", timeLeft.toString());
-			document.getElementById("question").children[1].innerText = question;
+			document.getElementById("question").children[1].innerHTML = question;
 
 			setInterval(function() {
 				setTimer(brainlet.getTimeLeft());
