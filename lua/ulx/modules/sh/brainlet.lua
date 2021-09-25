@@ -136,7 +136,6 @@ else
 
 		frame:SetPos((0.5 - width / 2) * scrw, (0.5 - height / 2) * scrh)
 		frame:SetSize(width * scrw, height * scrh)
-		frame:SetTitle("Brainlet")
 		frame:SetVisible(true)
 		frame:SetDraggable(false)
 		frame:ShowCloseButton(false)
