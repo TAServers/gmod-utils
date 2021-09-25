@@ -154,10 +154,6 @@ else
 				frame:Remove()
 			end)
 
-			timer.Simple(0.05, function()
-				html:Call(string.format("setTimer(%d);", deadline - CurTime()))
-			end)
-
 			html:Call(string.format(
 				'init("%s", "%s", "%s", %d);',
 				category,

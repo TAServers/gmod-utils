@@ -168,6 +168,12 @@
 			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
 			document.getElementById("question").children[0].setAttribute("value", timeLeft.toString());
 			document.getElementById("question").children[1].innerHTML = question;
+
+			const startTime = Date.getTime();
+
+			setInterval(function() {
+				setTimer(timeLeft - (Date.getTime() - startTime) / 1000);
+			}, 50)
 		}
 	</script>
 </body>
