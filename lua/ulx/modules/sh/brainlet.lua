@@ -32,11 +32,11 @@ if SERVER then
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
 				Color(255, 255, 255), " incorrectly answered the brainlet \"",
-				--Color(240, 224, 86), outstandingBrainlets[plr].question,
+				Color(240, 224, 86), outstandingBrainlets[plr].question,
 				Color(255, 255, 255), "\", the right answer was \"",
-				--Color(77, 255, 80), outstandingBrainlets[plr].answer,
+				Color(77, 255, 80), outstandingBrainlets[plr].answer,
 				Color(255, 255, 255), "\", but they answered \"",
-				--Color(255, 91, 77), answer,
+				Color(255, 91, 77), answer,
 				Color(255, 255, 255), "\""
 			)
 			ULib.kick(plr, "You are officially a dumbass")
@@ -64,6 +64,7 @@ if SERVER then
 
 			-- Register brainlet (tracked serverside so without svlua there's literally no way to bypass, unlike a certain server's brainlet :trollhd:)
 			outstandingBrainlets[target] = {
+				question = question,
 				answer = question.correct_answer,
 				deadline = deadline
 			}
