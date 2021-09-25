@@ -164,6 +164,11 @@
 				setTimer((timeLeft / startTime) * 100);
 			}, 10)
 		}
+
+		// Tell Lua we've loaded
+		setTimeout(function() {
+			brainlet.loaded();
+		}, 100);
 	</script>
 </body>
 </html>
