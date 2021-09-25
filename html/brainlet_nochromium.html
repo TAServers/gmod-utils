@@ -6,218 +6,162 @@
 	<title>Brainlet</title>
 
 	<style>
-		/*
-		* Prefixed by https://autoprefixer.github.io
-		* PostCSS: v8.3.6,
-		* Autoprefixer: v10.3.1
-		* Browsers: last 4 version
-		*/
-
-		:root {
-			--primary: #222629;
-			--secondary: #f07b16;
-			--accent: #f77d1a;
-			--accent-text: #e0f0f3;
-			--text-colour: #6b6e70;
-			--timer-background: #474b4f;
-			font-size: 10px;
-		}
-
 		body {
 			padding: 0;
 			margin: 0;
 
-			background-color: var(--primary);
-			color: var(--text-colour);
+			background-color: #222629;
+			color: #6b6e70;
 			
 			font-family: Roboto, sans-serif;
 			font-weight: lighter;
+			font-size: 10px;
 			letter-spacing: 0.1em;
-			text-shadow: -2px 2px 8px rgba(34, 38, 41, 0.25);
+		}
 
-			display: -webkit-box;
-
-			display: -ms-flexbox;
-
-			display: flex;
-			-webkit-box-orient: vertical;
-			-webkit-box-direction: normal;
-				-ms-flex-direction: column;
-					flex-direction: column;
-
-			width: 100vw;
-			height: 100vh;
+		#container {
+			padding-left: 16px;
+			padding-right: 16px;
 		}
 
 		#title {
-			color: var(--secondary);
+			color: #f07b16;
 			font-size: 1.5em;
 			text-align: center;
 
-			margin-top: 8px;
-			margin-bottom: 8px;
+			padding-top: 8px;
+			padding-bottom: 8px;
+
+			display: block;
+			width: 100%;
 		}
 
 		#question {
-			padding: 0% 5% 0% 5%;
-			display: -ms-grid;
-			display: grid;
+			padding: 0;
+			margin: 0;
+			display: block;
+
+			height: 15em;
+
+			background-color: #474b4f;
+
+			position: relative;
 		}
 
 		#question span {
-			-ms-grid-column: 1;
-				grid-column-start: 1;
-			-ms-grid-row: 1;
-				grid-row-start: 1;
-
-			margin: 16px;
-			margin-left: 6px;
-
 			font-size: 3em;
 
-			color: var(--accent-text);
+			color: #e0f0f3;
 
-			display: -webkit-inline-box;
-
-			display: -ms-inline-flexbox;
-
-			display: inline-flex;
-			-webkit-box-align: center;
-				-ms-flex-align: center;
-					align-items: center;
 			text-align: center;
-		}
 
-		progress {
-			-webkit-appearance: none;
-			-moz-appearance: none;
-			appearance: none;
-
-			-ms-grid-column: 1;
-
-				grid-column-start: 1;
-			-ms-grid-row: 1;
-				grid-row-start: 1;
+			position: absolute;
+			top: 0;
+			left: 0;
 
 			width: 100%;
-			height: 30vh;
-			min-height: 100%;
+			height: 100%;
+
+			display: table-cell;
+			vertical-align: middle;
 		}
+		#progress-bar {
+			background-color: #f77d1a;
 
-		progress::-webkit-progress-bar {
-			border: 0;
-			border-radius: 10px;
-
-			background: var(--timer-background);
-			-webkit-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
-					box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
-		}
-		progress::-webkit-progress-value {
-			border: 0;
-			border-radius: 10px;
-
-			background: var(--accent);
-
-			-webkit-box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
-						0 0 5px var(--accent);
-
-					box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
-						0 0 5px var(--accent);
-
-			border: 1px solid var(--accent);
+			height: 100%;
+			width: 100%;
 		}
 
 		#answers {
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
-			-webkit-box-orient: horizontal;
-			-webkit-box-direction: normal;
-				-ms-flex-direction: row;
-					flex-direction: row;
-			-ms-flex-wrap: wrap;
-				flex-wrap: wrap;
-
+			display: block;
 			margin: 16px;
-
 			height: 100%;
 
-			-webkit-box-pack: center;
-
-				-ms-flex-pack: center;
-
-					justify-content: center;
+			text-align: center;
+			display: block;
+			overflow: hidden;
 		}
 
-		button {
-			background-color: var(--accent);
-			color: var(--accent-text);
+		a {
+			font-size: 2.4em;
+			text-decoration: none;
+		}
+		a:hover> div {
+			background-color: #f8903a;
+		}
+		a:active> div {
+			background-color: #f67409;
+		}
+
+		a > div {
+			background-color: #f77d1a;
+			color: #e0f0f3;
 
 			border: 0;
-			border-radius: 10px;
-
-			font-size: 2.4em;
-
 			margin: 16px;
 			padding: 8px;
-			min-width: 15em;
-			-webkit-box-flex: 1;
-				-ms-flex: 1;
-					flex: 1;
 
+			min-width: 15em;
 			min-height: 3em;
 			max-height: 10em;
 
 			outline: none;
-
-			-webkit-box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
-						-2px 2px 28px 0px rgba(0, 0, 0, 0.5);
-
-					box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
-						-2px 2px 28px 0px rgba(0, 0, 0, 0.5);
 		}
-		button:hover {
-			-webkit-filter: brightness(110%);
-					filter: brightness(110%);
-			-webkit-box-shadow: 0 0 5px var(--accent);
-					box-shadow: 0 0 5px var(--accent);
-		}
-		button:active {
-			-webkit-filter: brightness(90%);
-					filter: brightness(90%);
+
+		.footer {
+			display: block;
+			text-align: center;
+			font-size: 2em;
 		}
 	</style>
 </head>
 
 <body>
-	<span id="title">Category Name: Difficulty</span>
-	<div id="question">
-		<progress value="1" max="1"></progress>
-		<span>question</span>
+	<div id="container">
+		<span id="title">Category Name: Difficulty</span>
+		<div id="question">
+			<div id="progress-bar"></div>
+			<span>question</span>
+		</div>
+		<div id="answers"></div>
+		<span class="footer">You're using a non-Chromium branch of GMod so most features aren't supported</span>
+		<span class="footer">Please consider switching to a Chromium branch in the Steam betas section</span>
+		<span class="footer">(Right Click -> Properties... -> Betas)</span>
+		
 	</div>
-	<div id="answers"></div>
 
 	<script>
+		function onClick(name) {
+			brainlet.onClick(name);
+			return false;
+		}
+
 		function addButton(name) {
-			var answer = document.createElement("button");
-			answer.innerHTML = name;
-			answer.setAttribute("onclick", "brainlet.onClick(\"" + name + "\")");
+			var answer = document.createElement("a");
+			answer.setAttribute("onclick", "onClick(\"" + name + "\")");
+			answer.setAttribute("href", "#");
+
+			var container = document.createElement("div");
+			container.setAttribute("class", "button");
+			container.innerHTML = name;
+			answer.appendChild(container);
+
 			document.getElementById("answers").appendChild(answer);
 		}
 
 		function setTimer(val) {
-			document.getElementById("question").children[0].setAttribute("value", val.toString());
+			document.getElementById("question").children[0].style.width = val.toString() + "%";
 		}
 
 		function init(category, difficulty, question, timeLeft) {
 			document.getElementById("title").innerHTML = category + ": " + difficulty;
 			document.getElementById("question").children[1].innerHTML = question;
 			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
-			setTimer(timeLeft);
 
+			var startTime = timeLeft;
 			setInterval(function() {
 				timeLeft -= 0.01;
-				setTimer(timeLeft);
+				setTimer((timeLeft / startTime) * 100);
 			}, 10)
 		}
 	</script>
