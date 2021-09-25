@@ -210,7 +210,7 @@
 		}
 
 		function init(category, difficulty, question, timeLeft) {
-			document.getElementById("title").innerHTML = `${category}: ${difficulty}`;
+			document.getElementById("title").innerHTML = category + ": " + difficulty;
 			document.getElementById("question").children[1].innerHTML = question;
 			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
 			setTimer(timeLeft);
