@@ -199,7 +199,7 @@
 
 	<script>
 		function addButton(name) {
-			let answer = document.createElement("button");
+			var answer = document.createElement("button");
 			answer.innerHTML = name;
 			answer.setAttribute("onclick", "brainlet.onClick(\"" + name + "\")");
 			document.getElementById("answers").appendChild(answer);
