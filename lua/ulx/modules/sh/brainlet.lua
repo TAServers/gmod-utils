@@ -146,14 +146,14 @@ else
 		html:Dock(FILL)
 		html:OpenURL(BRANCH == "chromium" and "http://www.tasservers.com/gmod/utils/brainlet.html" or "http://www.tasservers.com/gmod/utils/brainlet_nochromium.html")
 
-		html:AddFunction("brainlet", "loaded", function()
-			html:AddFunction("brainlet", "onClick", function(answer)
-				net.Start("TASUtils.Brainlet")
-				net.WriteString(answer)
-				net.SendToServer()
-				frame:Remove()
-			end)
+		html:AddFunction("brainlet", "onClick", function(answer)
+			net.Start("TASUtils.Brainlet")
+			net.WriteString(answer)
+			net.SendToServer()
+			frame:Remove()
+		end)
 
+		html:AddFunction("brainlet", "loaded", function()
 			html:Call(string.format(
 				'init("%s", "%s", "%s", %d);',
 				category,
