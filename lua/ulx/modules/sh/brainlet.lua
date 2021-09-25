@@ -146,7 +146,7 @@ else
 		html:OpenURL("http://www.tasservers.com/gmod/utils/brainlet.html")
 		html:Refresh(true)
 
-		function html:OnDocumentReady()
+		function html:OnFinishLoadingDocument()
 			html:AddFunction("brainlet", "onClick", function(answer)
 				net.Start("TASUtils.Brainlet")
 				net.WriteString(answer)
