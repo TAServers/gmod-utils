@@ -40,14 +40,14 @@ function opentdb.FetchQuestions(callback, amount, category, difficulty)
 
 	-- TODO: Implement a locally stored trivia dataset fallback
 	http.Fetch(
-		string.format("https://opentdb.com/api.php?amount=%i&category=%i&difficulty=%s", amount, category, difficulty),
+		string.format("https://opentdb.com/api.php?amount=%i&category=%i&difficulty=%s&encode=base64", amount, category, difficulty),
 		function(body, size, headers, statusCode)
 			if statusCode != 200 then callback(false, {}) end
 
 			body = util.JSONToTable(body)
 			if body["response_code"] != 0 then callback(false, {}) end
 
-			callback(true, body.results)
+			callback(true, util.Base64Decode(body.results))
 		end,
 		function() callback(false, {}) end
 	)

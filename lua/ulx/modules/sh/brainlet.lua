@@ -89,16 +89,15 @@ if SERVER then
 
 				if question.type == "multiple" then
 					net.WriteBool(true)
-					net.WriteString(question.correct_answer)
 
 					local numIncorrectAnswers = #question.incorrect_answers
-					net.WriteUInt(numIncorrectAnswers, 8)
+					net.WriteUInt(numIncorrectAnswers + 1, 8)
+					net.WriteString(question.correct_answer)
 					for i = 1, numIncorrectAnswers do
 						net.WriteString(question.incorrect_answers[i])
 					end
 				else
 					net.WriteBool(false)
-					net.WriteBool(question.correct_answer == "True")
 				end
 
 				net.WriteFloat(deadline) -- Note this isn't used for validation, just the timer GUI
@@ -109,27 +108,68 @@ if SERVER then
 		end, 1, opentdb.Category[category], opentdb.Difficulty[difficulty])
 	end
 else
+	-- Even if someone goes in and removes the netmsg receiver clientside, they'll still get timed out by the server
 	net.Receive("TASUtils.Brainlet", function()
 		-- Read packet
 		local category = net.ReadString()
 		local difficulty = net.ReadString()
 		local question = net.ReadString()
 
-		local correctAnswer, answers = nil, {}
+		local answers = {}
 		if net.ReadBool() then -- Multiple choice
 			for i = 1, net.ReadUInt(8) do
 				answers[i] = net.ReadString()
 			end
-			answers[#answers + 1] = correctAnswer
 			TASUtils.ShuffleTable(answers) -- Shuffle the table so the correct answer is always in a random position
 		else -- True/False
-			correctAnswer = net.ReadBool()
 			answers = {"True", "False"}
 		end
 
 		local deadline = net.ReadFloat()
 
-		-- Create the GUI window for brainlet (for testing this can literally just be a plain derma window)
+		-- Create the GUI window for brainlet
+		local frame = vgui.Create("DFrame")
+		local scrw, scrh = ScrW(), ScrH() -- Cache screen dimensions
+		width, height = math.Clamp(width, 0, 1), math.Clamp(height, 0, 1)
+
+		frame:SetPos((0.5 - width / 2) * scrw, (0.5 - height / 2) * scrh)
+		frame:SetSize(width * scrw, height * scrh)
+		frame:SetTitle("Brainlet")
+		frame:SetVisible(true)
+		frame:SetDraggable(false)
+		frame:ShowCloseButton(false)
+
+		local html = vgui.Create("DHTML", frame)
+		html:Dock(FILL)
+		html:OpenURL("asset://garrysmod/html/brainlet.html")
+
+		html:AddFunction("brainlet", "onClick", function(answer)
+			net.Start("TASUtils.Brainlet")
+			net.WriteString(answer)
+			net.SendToServer()
+			frame:Remove()
+		end)
+
+		html:Call(string.format(
+			'init("%s", "%s", "%s", %s);',
+			category,
+			difficulty,
+			question,
+			deadline - CurTime()
+		))
+
+		for _, answer in ipairs(answers) do
+			html:Call(string.format(
+				'addButton("%s")',
+				answer
+			))
+		end
+
+		function html:Think()
+			html:Call(string.format('setTimer("%s");', deadline - CurTime()))
+		end
+
+		frame:MakePopup()
 	end)
 end
 

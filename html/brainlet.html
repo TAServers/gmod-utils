@@ -1,0 +1,174 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Brainlet</title>
+
+	<style>
+		:root {
+			--primary: #222629;
+			--secondary: #f07b16;
+			--accent: #f77d1a;
+			--accent-text: #e0f0f3;
+			--text-colour: #6b6e70;
+			--timer-background: #474b4f;
+			font-size: 10px;
+		}
+
+		body {
+			padding: 0;
+			margin: 0;
+
+			background-color: var(--primary);
+			color: var(--text-colour);
+			
+			font-family: Roboto, sans-serif;
+			font-weight: lighter;
+			letter-spacing: 0.1em;
+			text-shadow: -2px 2px 8px rgba(34, 38, 41, 0.25);
+
+			display: flex;
+			flex-direction: column;
+
+			width: 100vw;
+			height: 100vh;
+		}
+
+		#title {
+			color: var(--secondary);
+			font-size: 1.5em;
+			text-align: center;
+
+			margin-top: 8px;
+			margin-bottom: 8px;
+		}
+
+		#question {
+			padding: 0% 5% 0% 5%;
+			display: grid;
+		}
+
+		#question span {
+			grid-column-start: 1;
+			grid-row-start: 1;
+
+			margin: 16px;
+			margin-left: 6px;
+
+			font-size: 3em;
+
+			color: var(--accent-text);
+
+			display: inline-flex;
+			align-items: center;
+			text-align: center;
+		}
+
+		progress {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+
+			grid-column-start: 1;
+			grid-row-start: 1;
+
+			width: 100%;
+			height: 30vh;
+			min-height: 100%;
+		}
+
+		progress::-webkit-progress-bar {
+			border: 0;
+			border-radius: 10px;
+
+			background: var(--timer-background);
+			box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.3);
+		}
+		progress::-webkit-progress-value {
+			border: 0;
+			border-radius: 10px;
+
+			background: var(--accent);
+
+			box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+						0 0 5px var(--accent);
+
+			border: 1px solid var(--accent);
+		}
+
+		#answers {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+
+			margin: 16px;
+
+			height: 100%;
+
+			justify-content: center;
+		}
+
+		button {
+			background-color: var(--accent);
+			color: var(--accent-text);
+
+			border: 0;
+			border-radius: 10px;
+
+			font-size: 2.4em;
+
+			margin: 16px;
+			padding: 8px;
+			min-width: 15em;
+			flex: 1;
+
+			min-height: 3em;
+			max-height: 10em;
+
+			outline: none;
+
+			box-shadow: inset -4px 0px 10px 0px rgba(253, 141, 60, 0.363),
+						-2px 2px 28px 0px rgba(0, 0, 0, 0.5);
+		}
+		button:hover {
+			filter: brightness(110%);
+			box-shadow: 0 0 5px var(--accent);
+		}
+		button:active {
+			filter: brightness(90%);
+			box-shadow: inset 20px 20px 60px #b25200,
+						inset -20px -20px 60px #f07000;
+		}
+	</style>
+</head>
+
+<body>
+	<span id="title">Category Name: Difficulty</span>
+	<div id="question">
+		<progress value="1" max="1"></progress>
+		<span>question</span>
+	</div>
+	<div id="answers"></div>
+
+	<script>
+		function addButton(name) {
+			let answer = document.createElement("button");
+			answer.innerText = name;
+			answer.setAttribute("onclick", "brainlet.onClick(\"" + name + "\")");
+			document.getElementById("answers").appendChild(answer);
+		}
+
+		function setTimer(val) {
+			document.getElementById("question").children[0].setAttribute("value", val.toString());
+		}
+
+		function init(category, difficulty, question, timeLeft) {
+			document.getElementById("title").innerText = `${category}: ${difficulty}`;
+			document.getElementById("question").children[0].setAttribute("max", timeLeft.toString());
+			document.getElementById("question").children[0].setAttribute("value", timeLeft.toString());
+			document.getElementById("question").children[1].innerText = question;
+		}
+	</script>
+</body>
+</html>
