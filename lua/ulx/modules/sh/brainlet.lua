@@ -154,9 +154,9 @@ else
 				frame:Remove()
 			end)
 
-			function html:Think()
-				html:Call(string.format("time = %d;", deadline - CurTime()))
-			end
+			timer.Simple(0.05, function()
+				html:Call(string.format("setTimer(%d);", deadline - CurTime()))
+			end)
 
 			html:Call(string.format(
 				'init("%s", "%s", "%s", %d);',
