@@ -18,6 +18,9 @@ function createProgressBar(title, parent) {
 	barContainer.bars = {};
 
 	barContainer.addElement = function(id, colour) {
+		// Container
+		var container = document.createElement("svg");
+
 		// Progress bar
 		var bar = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 		bar.setAttribute("class", "bar");
@@ -31,6 +34,7 @@ function createProgressBar(title, parent) {
 		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke-dashoffset", "0");
 		bar.setAttribute("stroke", "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")");
+		container.appendChild(bar);
 
 		// Label
 		var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -39,12 +43,11 @@ function createProgressBar(title, parent) {
 		label.setAttribute("dominant-baseline", "middle");
 		setLabelPos(label, 1, 30);
 
-		label.innerText = title;
+		label.innerHTML = title;
+		container.appendChild(label);
 
-		bar.appendChild(label);
-
-		this.contentDocument.getElementsByTagName("svg")[0].appendChild(bar);
-		this.bars[id] = bar;
+		this.contentDocument.getElementsByTagName("svg")[0].appendChild(container);
+		this.bars[id] = container;
 	};
 
 	barContainer.setProgress = function(id, percentage) {
