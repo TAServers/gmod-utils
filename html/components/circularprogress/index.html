@@ -21,11 +21,16 @@
 <body style="background-color: #222629;">
 	<script type="text/javascript" src="script.js"></script>
 	<script>
-		var bar = createProgressBar("Test", document.getElementsByTagName("body")[0]);
+		var bar = createProgressBar("Server", document.getElementsByTagName("body")[0]);
 
 		bar.addEventListener("load", function() {
-			bar.addElement("main", [255, 150, 0]);
-			bar.setProgress("main", 0.6);
+			bar.addElement("CPU", [59, 114, 196]);
+			bar.setProgress("CPU", 0.6);
+		});
+
+		bar.addEventListener("load", function() {
+			bar.addElement("RAM", [80, 165, 199]);
+			bar.setProgress("RAM", 0.5);
 		});
 	</script>
 </body>

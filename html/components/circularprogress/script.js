@@ -18,6 +18,7 @@ function createProgressBar(title, parent) {
 	barContainer.bars = {};
 
 	barContainer.addElement = function(id, colour) {
+		var cssColour = "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")";
 		// Container
 		var container = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
@@ -35,7 +36,7 @@ function createProgressBar(title, parent) {
 
 		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke-dashoffset", "0");
-		bar.setAttribute("stroke", "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")");
+		bar.setAttribute("stroke", cssColour);
 		container.appendChild(bar);
 		container.bar = bar;
 
@@ -44,6 +45,7 @@ function createProgressBar(title, parent) {
 		label.setAttribute("class", "label");
 		label.setAttribute("text-anchor", "middle");
 		label.setAttribute("dominant-baseline", "middle");
+		label.setAttribute("fill", cssColour);
 		setLabelPos(label, 1, 30);
 
 		label.innerHTML = title;
