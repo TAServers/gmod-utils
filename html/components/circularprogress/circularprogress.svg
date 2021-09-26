@@ -7,14 +7,7 @@
 			<feGaussianBlur stdDeviation="1.5"/>
 			<feComposite operator="atop" in2="SourceGraphic"/>
 		</filter>
-
-		<filter id="inset-glow">
-			<feFlood flood-color="var(--bar-glow)"/>
-			<feComposite operator="out" in2="SourceGraphic"/>
-			<feGaussianBlur stdDeviation="1"/>
-			<feComposite operator="atop" in2="SourceGraphic"/>
-		</filter>
 	</defs>
 
-	<circle filter="url(#inset-shadow)" r="30" cx="50" cy="50" fill="none" stroke="var(--progress-background)"></circle>
+	<circle filter="url(#inset-shadow)" r="30" cx="50" cy="50" fill="none" stroke="#474b4f"></circle>
 </svg>
