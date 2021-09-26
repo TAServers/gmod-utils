@@ -12,7 +12,7 @@
 			<feDropShadow
 				dx="0"
 				dy="0"
-				stdDeviation="4"
+				stdDeviation="1"
 				floodColor="black"
 				floodOpacity="0.5"
 			/>
