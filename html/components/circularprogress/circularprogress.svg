@@ -12,9 +12,9 @@
 			<feDropShadow
 				dx="0"
 				dy="0"
-				stdDeviation="1"
-				floodColor="black"
-				floodOpacity="0.5"
+				stdDeviation="0.8"
+				floodColor="#222629"
+				floodOpacity="0.2"
 			/>
 		</filter>
 	</defs>
