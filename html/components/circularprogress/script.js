@@ -17,10 +17,30 @@ function createProgressBar(title, parent) {
 
 	barContainer.bars = {};
 
+	barContainer.sortElements = function() {
+		var elements = {};
+		var keys = [];
+
+		for (var id in this.bars) {
+			elements[this.bars[id].percentage] = this.bars[id];
+			keys.push(this.bars[id].percentage);
+		}
+
+		keys.sort(function(a, b) {
+			return b - a;
+		});
+
+		for (var key in keys) {
+			elements[key].parentNode.appendChild(elements[key]);
+		}
+	};
+
 	barContainer.addElement = function(id, colour) {
 		var cssColour = "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")";
+
 		// Container
 		var container = document.createElementNS("http://www.w3.org/2000/svg", "g");
+		container.percentage = 0;
 
 		// Progress bar
 		var bar = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -36,7 +56,7 @@ function createProgressBar(title, parent) {
 		bar.setAttribute("filter", "url(#drop-shadow)")
 
 		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
-		bar.setAttribute("stroke-dashoffset", "0");
+		bar.setAttribute("stroke-dashoffset", CACHED_CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke", cssColour);
 		container.appendChild(bar);
 		container.bar = bar;
@@ -46,7 +66,6 @@ function createProgressBar(title, parent) {
 		label.setAttribute("class", "label");
 		label.setAttribute("text-anchor", "middle");
 		label.setAttribute("dominant-baseline", "middle");
-		setLabelPos(label, 1, 30);
 
 		label.innerHTML = id;
 		container.appendChild(label);
@@ -54,16 +73,22 @@ function createProgressBar(title, parent) {
 
 		this.contentDocument.getElementsByTagName("svg")[0].appendChild(container);
 		this.bars[id] = container;
+
+		setLabelPos(label, 0, 30);
+		this.sortElements();
 	};
 
 	barContainer.setProgress = function(id, percentage) {
+		this.bars[id].percentage = percentage;
+
 		this.bars[id].bar.setAttribute(
 			"stroke-dashoffset",
 			(CACHED_CIRCUMFERENCE - percentage * CACHED_CIRCUMFERENCE).toString()
 		);
 
 		setLabelPos(this.bars[id].label, percentage, 30);
-	}
+		this.sortElements();
+	};
 
 	barContainer.addEventListener("load", function() {
 		barContainer.contentDocument.getElementsByClassName("title")[0].innerHTML = title;

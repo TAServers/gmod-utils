@@ -13,8 +13,8 @@
 				dx="0"
 				dy="0"
 				stdDeviation="0.5"
-				flood-color="#222629"
-				flood-opacity="0.3"
+				flood-color="black"
+				flood-opacity="0.2"
 			/>
 		</filter>
 	</defs>
