@@ -48,7 +48,7 @@ function createProgressBar(title, parent) {
 		label.setAttribute("fill", cssColour);
 		setLabelPos(label, 1, 30);
 
-		label.innerHTML = title;
+		label.innerHTML = id;
 		container.appendChild(label);
 		container.label = label;
 
@@ -66,7 +66,7 @@ function createProgressBar(title, parent) {
 	}
 
 	barContainer.addEventListener("load", function() {
-		barContainer.contentDocument.getElementsByClassName("title")[0].innerText = title;
+		barContainer.contentDocument.getElementsByClassName("title")[0].innerHTML = title;
 	});
 
 	parent.appendChild(barContainer);
