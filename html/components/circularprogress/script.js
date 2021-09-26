@@ -37,6 +37,7 @@ function createProgressBar(title, parent) {
 		bar.setAttribute("stroke-dashoffset", "0");
 		bar.setAttribute("stroke", "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")");
 		container.appendChild(bar);
+		container.bar = bar;
 
 		// Label
 		var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -47,16 +48,19 @@ function createProgressBar(title, parent) {
 
 		label.innerHTML = title;
 		container.appendChild(label);
+		container.label = label;
 
 		this.contentDocument.getElementsByTagName("svg")[0].appendChild(container);
 		this.bars[id] = container;
 	};
 
 	barContainer.setProgress = function(id, percentage) {
-		this.bars[id].setAttribute(
+		this.bars[id].bar.setAttribute(
 			"stroke-dashoffset",
 			(CACHED_CIRCUMFERENCE - percentage * CACHED_CIRCUMFERENCE).toString()
 		);
+
+		setLabelPos(this.bars[id].label, percentage, 30);
 	}
 
 	barContainer.addEventListener("load", function() {
