@@ -26,12 +26,17 @@ function createProgressBar(title, parent) {
 			keys.push(this.bars[id].percentage);
 		}
 
+		console.log(elements)
+
+		console.log(keys);
 		keys.sort(function(a, b) {
 			return b - a;
 		});
+		console.log(keys);
 
-		for (var key in keys) {
-			elements[key].parentNode.appendChild(elements[key]);
+		for (var i = 0; i < keys.length; i++) {
+			elements[keys[i]].parentNode.appendChild(elements[keys[i]]);
+			console.log(elements[keys[i]].parentNode);
 		}
 	};
 
