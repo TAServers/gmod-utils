@@ -13,7 +13,7 @@ svg {
 }
 
 circle {
-	transition: stroke-dashoffset 1s linear;
+	transition: stroke-dashoffset 0.5s linear;
 	stroke: var(--progress-background);
 	stroke-width: 10;
 }

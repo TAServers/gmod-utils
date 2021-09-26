@@ -19,7 +19,7 @@ function createProgressBar(title, parent) {
 
 		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke-dashoffset", "0");
-		bar.setAttribute("stroke", "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")");
+		bar.style.stroke = "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ");";
 
 		console.log(this.contentDocument);
 		this.contentDocument.getElementsByTagName("svg")[0].appendChild(bar);
