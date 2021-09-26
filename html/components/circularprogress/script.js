@@ -67,7 +67,7 @@ function createProgressBar(title, parent) {
 		label.setAttribute("text-anchor", "middle");
 		label.setAttribute("dominant-baseline", "middle");
 
-		label.innerHTML = id;
+		label.appendChild(document.createTextNode(id))
 		container.appendChild(label);
 		container.label = label;
 
@@ -91,7 +91,12 @@ function createProgressBar(title, parent) {
 	};
 
 	barContainer.addEventListener("load", function() {
-		barContainer.contentDocument.getElementsByClassName("title")[0].innerHTML = title;
+		var titleElement = barContainer.contentDocument.getElementsByClassName("title")[0];
+
+		titleElement.removeChild(titleElement.children[0]);
+		titleElement.appendChild(
+			document.createTextNode(title)
+		);
 	});
 
 	parent.appendChild(barContainer);
