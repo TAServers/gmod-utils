@@ -5,14 +5,23 @@
 	<meta charset="utf-8">
 	<title>Circular Progress Bar</title>
 
-	<link href="style.css" rel="stylesheet" type="text/css">
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		object {
+			width: 100%;
+			height: 30em;
+		}
+	</style>
 </head>
 
 <body style="background-color: #222629;">
 	<script type="text/javascript" src="script.js"></script>
 	<script>
-		var bar = createProgressBar("", document.getElementsByTagName("body")[0]);
-		bar.setAttribute("style", "width: 400px; height: 400px;");
+		var bar = createProgressBar("Test", document.getElementsByTagName("body")[0]);
 
 		bar.addEventListener("load", function() {
 			bar.addElement("main", [255, 150, 0]);

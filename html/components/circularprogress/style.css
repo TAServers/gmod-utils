@@ -4,6 +4,13 @@ svg {
 }
 
 circle {
-	transition: stroke-dashoffset 0.5s linear;
 	stroke-width: 10;
+}
+
+text {
+	font-family: Poppins;
+	font-weight: bold;
+	font-size: 0.8em;
+
+	fill: whitesmoke;
 }
