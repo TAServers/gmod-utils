@@ -33,6 +33,7 @@ function createProgressBar(title, parent) {
 
 		bar.setAttribute("fill", "transparent");
 		bar.setAttribute("stroke-linecap", "round");
+		bar.setAttribute("filter", "url(#drop-shadow)")
 
 		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke-dashoffset", "0");
