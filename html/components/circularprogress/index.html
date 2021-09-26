@@ -14,7 +14,9 @@
 		var bar = createProgressBar("", document.getElementsByTagName("body")[0]);
 		bar.setAttribute("style", "width: 100vw; height: 100vh;");
 
-		bar.addElement("main", [255, 150, 0]);
+		bar.addEventListener("load", function() {
+			bar.addElement("main", [255, 150, 0]);
+		});
 	</script>
 </body>
 </html>
