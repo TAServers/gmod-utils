@@ -45,7 +45,6 @@ function createProgressBar(title, parent) {
 		label.setAttribute("class", "label");
 		label.setAttribute("text-anchor", "middle");
 		label.setAttribute("dominant-baseline", "middle");
-		label.setAttribute("fill", cssColour);
 		setLabelPos(label, 1, 30);
 
 		label.innerHTML = id;
