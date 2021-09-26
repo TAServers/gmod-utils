@@ -14,7 +14,7 @@
 				dy="0"
 				stdDeviation="0.8"
 				floodColor="#222629"
-				floodOpacity="0.2"
+				floodOpacity="0.1"
 			/>
 		</filter>
 	</defs>
