@@ -19,7 +19,7 @@ function createProgressBar(title, parent) {
 
 	barContainer.addElement = function(id, colour) {
 		// Container
-		var container = document.createElement("http://www.w3.org/2000/svg", "g");
+		var container = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
 		// Progress bar
 		var bar = document.createElementNS("http://www.w3.org/2000/svg", "circle");
