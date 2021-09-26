@@ -1,5 +1,20 @@
 <?xml-stylesheet type="text/css" href="style.css" ?>
 <svg class="circularprogress" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
-	<circle r="30" cx="50" cy="50" fill="transparent" stroke-dasharray="188.495559215" stroke-dashoffset="0"></circle>
-	<circle class="bar" r="30" cx="50" cy="50" fill="transparent" stroke-dasharray="188.495559215" stroke-dashoffset="100" transform="rotate(-90, 50, 50)"></circle>
+	<defs>
+		<filter id="inset-shadow">
+			<feFlood flood-color="black"/>
+			<feComposite operator="out" in2="SourceGraphic"/>
+			<feGaussianBlur stdDeviation="1.5"/>
+			<feComposite operator="atop" in2="SourceGraphic"/>
+		</filter>
+
+		<filter id="inset-glow">
+			<feFlood flood-color="var(--bar-glow)"/>
+			<feComposite operator="out" in2="SourceGraphic"/>
+			<feGaussianBlur stdDeviation="1"/>
+			<feComposite operator="atop" in2="SourceGraphic"/>
+		</filter>
+	</defs>
+
+	<circle filter="url(#inset-shadow)" r="30" cx="50" cy="50" fill="none"></circle>
 </svg>
