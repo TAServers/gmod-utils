@@ -37,7 +37,7 @@ if CLIENT then
 			cam.End2D()
 		render.PopRenderTarget()
 
-		html:Call(string.format("setServerCPU(%d);setServerRAM(%d)", TASUtils.GetServerUsage()))
+		html:Call(string.format("setServerCPU(%d);setServerRAM(%d)", TASUtils.GetUsage()))
 		html:Call(string.format("setE2CPU(%d);setE2RAM(%d)", TASUtils.GetE2Usage()))
 		html:Call(string.format("setStarfallCPU(%d);setStarfallRAM(%d)", TASUtils.GetStarfallUsage()))
 	end)
