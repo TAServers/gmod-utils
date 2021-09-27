@@ -1,5 +1,5 @@
-var CACHED_CIRCUMFERENCE = 188.495559215;
 var RADIUS = 40;
+var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 function setLabelPos(label, percentage) {
 	var pi2pct = Math.PI * 2 * percentage - Math.PI / 2;
@@ -56,8 +56,8 @@ function createProgressBar(title, parent) {
 		bar.setAttribute("stroke-linecap", "round");
 		bar.setAttribute("filter", "url(#drop-shadow)")
 
-		bar.setAttribute("stroke-dasharray", CACHED_CIRCUMFERENCE.toString());
-		bar.setAttribute("stroke-dashoffset", CACHED_CIRCUMFERENCE.toString());
+		bar.setAttribute("stroke-dasharray", CIRCUMFERENCE.toString());
+		bar.setAttribute("stroke-dashoffset", CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke", cssColour);
 		container.appendChild(bar);
 		container.bar = bar;
@@ -84,7 +84,7 @@ function createProgressBar(title, parent) {
 
 		this.bars[id].bar.setAttribute(
 			"stroke-dashoffset",
-			(CACHED_CIRCUMFERENCE - percentage * CACHED_CIRCUMFERENCE).toString()
+			(CIRCUMFERENCE - percentage * CIRCUMFERENCE).toString()
 		);
 
 		setLabelPos(this.bars[id].label, percentage);
