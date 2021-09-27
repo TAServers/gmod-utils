@@ -23,23 +23,27 @@ if CLIENT then
 	html:SetMouseInputEnabled(false)
 	html:OpenURL(url)
 
-	hook.Add("PreRender", "TASUtils.ServerMonitor", function()
-		html:UpdateHTMLTexture()
-		local htmlMat = html:GetHTMLMaterial()
-		
-		if not htmlMat then return end
-		
-		render.PushRenderTarget(rt)	
-			cam.Start2D()
-				surface.SetMaterial(htmlMat)
-				surface.SetDrawColor(255, 255, 255)
-				surface.DrawTexturedRect(0, 0, 1024, 1024)
-			cam.End2D()
-		render.PopRenderTarget()
+	html:AddFunction("servermonitor", "onload", function()
+		hook.Add("PreRender", "TASUtils.ServerMonitor", function()
+			html:UpdateHTMLTexture()
+			local htmlMat = html:GetHTMLMaterial()
+			
+			if not htmlMat then return end
+			
+			render.PushRenderTarget(rt)	
+				cam.Start2D()
+					surface.SetMaterial(htmlMat)
+					surface.SetDrawColor(255, 255, 255)
+					surface.DrawTexturedRect(0, 0, 1024, 1024)
+				cam.End2D()
+			render.PopRenderTarget()
+		end)
 
-		html:Call(string.format("setServerCPU(%d);setServerRAM(%d)", TASUtils.GetUsage()))
-		html:Call(string.format("setE2CPU(%d);setE2RAM(%d)", TASUtils.GetE2Usage()))
-		html:Call(string.format("setStarfallCPU(%d);setStarfallRAM(%d)", TASUtils.GetStarfallUsage()))
+		hook.Add("Think", "TASUtils.ServerMonitor", function()
+			html:RunJavascript(string.format("setServerCPU(%.7f);setServerRAM(%.7f)", TASUtils.GetUsage()))
+			html:RunJavascript(string.format("setE2CPU(%.7f);setE2RAM(%.7f)", TASUtils.GetE2Usage()))
+			html:RunJavascript(string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f)", TASUtils.GetStarfallUsage()))
+		end)
 	end)
 
 	TASUtils.Materials.ServerMonitor = CreateMaterial(
