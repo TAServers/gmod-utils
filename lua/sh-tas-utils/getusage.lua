@@ -26,7 +26,7 @@ local updateRate = CreateConVar("tasutils_usage_updaterate", 8, {FCVAR_ARCHIVE, 
 if SERVER then
 	util.AddNetworkString("TASUtils.GetUsage")
 
-	local svTpsMin = CreateConVar("tasutils_tickrate", 66, FCVAR_ARCHIVE, "Server desired tickrate used by TASUtils.GetUsage", 0)
+	local svTpsMax = CreateConVar("tasutils_tickrate", 66, FCVAR_ARCHIVE, "Server desired tickrate used by TASUtils.GetUsage", 0)
 	local svTpsMin = CreateConVar("tasutils_tickrate_min", 33, FCVAR_ARCHIVE, "Min point for server tickrate used by TASUtils.GetUsage", 0)
 	local svRamMax = CreateConVar("tasutils_ram_max", 2, FCVAR_ARCHIVE, "Max point for server RAM usage returned by TASUtils.GetUsage (in gigabytes)", 0.01)
 
