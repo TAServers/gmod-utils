@@ -19,6 +19,6 @@
 		</filter>
 	</defs>
 
-	<circle filter="url(#inset-shadow)" r="40" cx="50" cy="50" fill="none" stroke="#474b4f"/>
+	<circle filter="url(#inset-shadow)" r="37.5" cx="50" cy="50" fill="none" stroke="#474b4f"/>
 	<text class="title" x="50" y="50" text-anchor="middle" dominant-baseline="middle"></text>
 </svg>
