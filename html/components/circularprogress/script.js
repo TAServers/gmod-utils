@@ -91,10 +91,7 @@ function createProgressBar(title, parent) {
 	};
 
 	barContainer.addEventListener("load", function() {
-		var titleElement = barContainer.contentDocument.getElementsByClassName("title")[0];
-
-		titleElement.removeChild(titleElement.children[0]);
-		titleElement.appendChild(
+		barContainer.contentDocument.getElementsByClassName("title")[0].appendChild(
 			document.createTextNode(title)
 		);
 	});

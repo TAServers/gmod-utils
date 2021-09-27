@@ -20,5 +20,5 @@
 	</defs>
 
 	<circle filter="url(#inset-shadow)" r="30" cx="50" cy="50" fill="none" stroke="#474b4f"/>
-	<text class="title" x="50" y="50" text-anchor="middle" dominant-baseline="middle">Title</text>
+	<text class="title" x="50" y="50" text-anchor="middle" dominant-baseline="middle"></text>
 </svg>
