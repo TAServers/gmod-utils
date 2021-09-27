@@ -1,5 +1,6 @@
 var RADIUS = 40;
 var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+var MIN_PROGRESS = 0.0000001;
 
 function setLabelPos(label, percentage) {
 	var pi2pct = Math.PI * 2 * percentage - Math.PI / 2;
@@ -57,7 +58,7 @@ function createProgressBar(title, parent) {
 		bar.setAttribute("filter", "url(#drop-shadow)")
 
 		bar.setAttribute("stroke-dasharray", CIRCUMFERENCE.toString());
-		bar.setAttribute("stroke-dashoffset", CIRCUMFERENCE.toString());
+		bar.setAttribute("stroke-dashoffset", (CIRCUMFERENCE - MIN_PROGRESS * CIRCUMFERENCE).toString());
 		bar.setAttribute("stroke", cssColour);
 		container.appendChild(bar);
 		container.bar = bar;
@@ -75,11 +76,12 @@ function createProgressBar(title, parent) {
 		this.contentDocument.getElementsByTagName("svg")[0].appendChild(container);
 		this.bars[id] = container;
 
-		setLabelPos(label, 0);
+		setLabelPos(label, MIN_PROGRESS);
 		this.sortElements();
 	};
 
 	barContainer.setProgress = function(id, percentage) {
+		percentage = Math.max(MIN_PROGRESS, percentage);
 		this.bars[id].percentage = percentage;
 
 		this.bars[id].bar.setAttribute(
