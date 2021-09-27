@@ -53,7 +53,7 @@ if SERVER then
 					end
 				end
 
-				data.sv.sf = total / frameTime -- Starfall CPU usage measured as a percentage of the frame
+				data.sv.sf.cpu = total / frameTime -- Starfall CPU usage measured as a percentage of the frame
 			end
 
 			if SF.Instance and SF.Instance.Ram then
