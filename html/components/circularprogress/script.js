@@ -38,8 +38,6 @@ function createProgressBar(title, parent) {
 	};
 
 	barContainer.addElement = function(id, colour) {
-		var cssColour = "rgb(" + colour[0].toString() + "," + colour[1].toString() + "," + colour[2].toString() + ")";
-
 		// Container
 		var container = document.createElementNS("http://www.w3.org/2000/svg", "g");
 		container.percentage = 0;
@@ -59,7 +57,7 @@ function createProgressBar(title, parent) {
 
 		bar.setAttribute("stroke-dasharray", CIRCUMFERENCE.toString());
 		bar.setAttribute("stroke-dashoffset", (CIRCUMFERENCE - MIN_PROGRESS * CIRCUMFERENCE).toString());
-		bar.setAttribute("stroke", cssColour);
+		bar.setAttribute("stroke", colour);
 		container.appendChild(bar);
 		container.bar = bar;
 
