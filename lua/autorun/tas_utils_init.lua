@@ -1,4 +1,5 @@
 TASUtils = {}
+TASUtils.Materials = {}
 
 if SERVER then
 	AddCSLuaFile()
