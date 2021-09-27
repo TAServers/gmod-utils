@@ -47,8 +47,8 @@ if SERVER then
 		if SF then
 			if SF.playerInstances then
 				local total = 0
-				for _, playerInstances in pairs(SF.playerInstances) do
-					for instance, _ in pairs(SF.playerInstances[instance.player]) do
+				for _, instances in pairs(SF.playerInstances) do
+					for instance, _ in pairs(instances) do
 						total = total + instance.cpu_total
 					end
 				end
