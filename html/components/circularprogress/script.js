@@ -1,10 +1,11 @@
 var CACHED_CIRCUMFERENCE = 188.495559215;
+var RADIUS = 40;
 
-function setLabelPos(label, percentage, radius) {
+function setLabelPos(label, percentage) {
 	var pi2pct = Math.PI * 2 * percentage - Math.PI / 2;
 
-	var x = Math.cos(pi2pct) * radius + 50;
-	var y = Math.sin(pi2pct) * radius + 50;
+	var x = Math.cos(pi2pct) * RADIUS + 50;
+	var y = Math.sin(pi2pct) * RADIUS + 50;
 
 	label.setAttribute("x", x.toString());
 	label.setAttribute("y", y.toString());
@@ -46,7 +47,7 @@ function createProgressBar(title, parent) {
 		var bar = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 		bar.setAttribute("class", "bar");
 
-		bar.setAttribute("r", "30");
+		bar.setAttribute("r", RADIUS.toString());
 		bar.setAttribute("cx", "50");
 		bar.setAttribute("cy", "50");
 		bar.setAttribute("transform", "rotate(-90, 50, 50)");
@@ -74,7 +75,7 @@ function createProgressBar(title, parent) {
 		this.contentDocument.getElementsByTagName("svg")[0].appendChild(container);
 		this.bars[id] = container;
 
-		setLabelPos(label, 0, 30);
+		setLabelPos(label, 0);
 		this.sortElements();
 	};
 
@@ -86,7 +87,7 @@ function createProgressBar(title, parent) {
 			(CACHED_CIRCUMFERENCE - percentage * CACHED_CIRCUMFERENCE).toString()
 		);
 
-		setLabelPos(this.bars[id].label, percentage, 30);
+		setLabelPos(this.bars[id].label, percentage);
 		this.sortElements();
 	};
 
