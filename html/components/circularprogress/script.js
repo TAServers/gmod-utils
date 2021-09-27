@@ -79,7 +79,7 @@ function createProgressBar(title, parent) {
 	};
 
 	barContainer.setProgress = function(id, percentage) {
-		percentage = Math.max(MIN_PROGRESS, percentage);
+		percentage = Math.min(1, Math.max(MIN_PROGRESS, percentage));
 		this.bars[id].percentage = percentage;
 
 		this.bars[id].bar.setAttribute(
