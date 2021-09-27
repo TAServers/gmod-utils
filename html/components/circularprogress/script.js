@@ -1,4 +1,4 @@
-var RADIUS = 40;
+var RADIUS = 37.5;
 var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 var MIN_PROGRESS = 0.0000001;
 
