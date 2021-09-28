@@ -30,7 +30,7 @@ if SERVER then
 	local svTpsMin = CreateConVar("tasutils_tickrate_min", 33, FCVAR_ARCHIVE, "Min point for server tickrate used by TASUtils.GetUsage", 0)
 	local svRamMax = CreateConVar("tasutils_ram_max", 2, FCVAR_ARCHIVE, "Max point for server RAM usage returned by TASUtils.GetUsage (in gigabytes)", 0.01)
 
-	local e2RamMax = GetConVar("wire_expression2_ram_emergency_shutdown_total")
+	local e2RamMax
 
 	local ticksSinceUpdate = updateRate:GetInt()
 	hook.Add("Think", "TASUtils.GetUsage", function()
@@ -45,14 +45,18 @@ if SERVER then
 		data.sv.ram = ramUsage / (svRamMax:GetFloat() * 1024 * 1024)
 
 		-- Update E2 usage
-		do
-			local total = 0
-			for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-				total = total + e2.context.timebench
+		if not e2RamMax then -- Wait for convar to exist
+			e2RamMax = GetConVar("wire_expression2_ram_emergency_shutdown_total")
+		else
+			do
+				local total = 0
+				for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
+					total = total + e2.context.timebench
+				end
+				data.sv.e2.cpu = total / frameTime
 			end
-			data.sv.e2.cpu = total / frameTime
+			data.sv.e2.ram = ramUsage / e2RamMax:GetInt() * 1000 -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
 		end
-		data.sv.e2.ram = ramUsage / e2RamMax:GetInt() * 1000 -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
 
 		-- Update SF usage
 		if SF then
