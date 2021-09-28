@@ -55,7 +55,7 @@ if SERVER then
 				end
 				data.sv.e2.cpu = total / frameTime
 			end
-			data.sv.e2.ram = ramUsage / e2RamMax:GetInt() * 1000 -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
+			data.sv.e2.ram = ramUsage / (e2RamMax:GetInt() * 1000) -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
 		end
 
 		-- Update SF usage
