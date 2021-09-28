@@ -9,6 +9,7 @@ local addons = {
     "1490124474",
     "1676032134",
     "1429966932",
+    "866368352", -- The only sniper rifle..
     "860057535",
     "415143062", -- TFA Base
     "866368346" -- TFA Ins Shared Parts
