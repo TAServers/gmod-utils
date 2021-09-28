@@ -60,7 +60,7 @@ if SERVER then
 				local total = 0
 				for _, instances in pairs(SF.playerInstances) do
 					for instance, _ in pairs(instances) do
-						total = total + instance.cpu_total
+						total = total + instance:movingCPUAverage()
 					end
 				end
 
