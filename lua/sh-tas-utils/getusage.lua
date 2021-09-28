@@ -51,7 +51,9 @@ if SERVER then
 			do
 				local total = 0
 				for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-					total = total + e2.context.timebench
+					if e2.context and e2.context.timebench then
+						total = total + e2.context.timebench
+					end
 				end
 				data.sv.e2.cpu = total / frameTime
 			end
