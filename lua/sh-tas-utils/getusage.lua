@@ -30,18 +30,29 @@ if SERVER then
 	local svTpsMin = CreateConVar("tasutils_tickrate_min", 33, FCVAR_ARCHIVE, "Min point for server tickrate used by TASUtils.GetUsage", 0)
 	local svRamMax = CreateConVar("tasutils_ram_max", 2, FCVAR_ARCHIVE, "Max point for server RAM usage returned by TASUtils.GetUsage (in gigabytes)", 0.01)
 
+	local e2RamMax = GetConVar("wire_expression2_ram_emergency_shutdown_total")
+
 	local ticksSinceUpdate = updateRate:GetInt()
 	hook.Add("Think", "TASUtils.GetUsage", function()
 		local frameTime = FrameTime()
+		local ramUsage = collectgarbage("count")
 
 		-- Update server usage
 		do
 			local min, max = svTpsMin:GetFloat(), svTpsMax:GetFloat()
 			data.sv.cpu = 1 - (1 / frameTime - min) / (max - min)
 		end
-		data.sv.ram = collectgarbage("count") / (svRamMax:GetFloat() * 1024 * 1024)
+		data.sv.ram = ramUsage / (svRamMax:GetFloat() * 1024 * 1024)
 
 		-- Update E2 usage
+		do
+			local total = 0
+			for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
+				total = total + e2.context.timebench
+			end
+			data.sv.e2.cpu = total / frameTime
+		end
+		data.sv.e2.ram = ramUsage / e2RamMax:GetInt() * 1000 -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
 
 		-- Update SF usage
 		if SF then
@@ -56,8 +67,8 @@ if SERVER then
 				data.sv.sf.cpu = total / frameTime -- Starfall CPU usage measured as a percentage of the frame
 			end
 
-			if SF.Instance and SF.Instance.Ram then
-				data.sv.sf.ram = SF.Instance.Ram / SF.RamCap:GetInt()
+			if SF.Instance and SF.Instance.RamAvg then
+				data.sv.sf.ram = SF.Instance.RamAvg / SF.RamCap:GetInt()
 			end
 		end
 
