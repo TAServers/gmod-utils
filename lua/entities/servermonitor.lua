@@ -39,12 +39,22 @@ if CLIENT then
 			render.PopRenderTarget()
 		end)
 
+		local updateRate = GetConVar("tasutils_usage_updaterate")
+		local interval = 0
 		hook.Add("Think", "TASUtils.ServerMonitor", function()
+			if interval ~= 0 then return end
+
 			html:QueueJavascript(
 				string.format("setServerCPU(%.7f);setServerRAM(%.7f);", TASUtils.GetUsage()) ..
 				string.format("setE2CPU(%.7f);setE2RAM(%.7f);", TASUtils.GetE2Usage()) ..
 				string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f);", TASUtils.GetStarfallUsage())
 			)
+
+			if not updateRate then
+				updateRate = GetConVar("tasutils_usage_updaterate")
+			else
+				interval = (interval + 1) % updateRate:GetInt()
+			end
 		end)
 	end)
 
