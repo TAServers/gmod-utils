@@ -41,9 +41,9 @@ if CLIENT then
 
 		hook.Add("Think", "TASUtils.ServerMonitor", function()
 			html:QueueJavascript(
-				string.format("setServerCPU(%.7f);setServerRAM(%.7f)", TASUtils.GetUsage()) ..
-				string.format("setE2CPU(%.7f);setE2RAM(%.7f)", TASUtils.GetE2Usage()) ..
-				string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f)", TASUtils.GetStarfallUsage())
+				string.format("setServerCPU(%.7f);setServerRAM(%.7f);", TASUtils.GetUsage()) ..
+				string.format("setE2CPU(%.7f);setE2RAM(%.7f);", TASUtils.GetE2Usage()) ..
+				string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f);", TASUtils.GetStarfallUsage())
 			)
 		end)
 	end)
