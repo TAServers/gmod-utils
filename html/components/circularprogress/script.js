@@ -15,7 +15,7 @@ function setLabelPos(label, percentage) {
 function createProgressBar(title, parent) {
 	var barContainer = document.createElement("object");
 	barContainer.setAttribute("type", "image/svg+xml");
-	barContainer.setAttribute("data", "http://wwwtaservers.com/gmod/utils/components/circularprogress/circularprogress.svg");
+	barContainer.setAttribute("data", "http://www.taservers.com/gmod/utils/components/circularprogress/circularprogress.svg");
 
 	barContainer.bars = {};
 
