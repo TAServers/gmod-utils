@@ -46,9 +46,9 @@ if SERVER then
 				Color(255, 255, 255), " incorrectly answered the brainlet \"",
 				Color(240, 224, 86), TASUtils.URLDecode(outstandingBrainlets[plr].question),
 				Color(255, 255, 255), "\", the right answer was \"",
-				Color(77, 255, 80), outstandingBrainlets[plr].answer,
+				Color(77, 255, 80), TASUtils.URLDecode(outstandingBrainlets[plr].answer),
 				Color(255, 255, 255), "\", but they answered \"",
-				Color(255, 91, 77), answer,
+				Color(255, 91, 77), TASUtils.URLDecode(answer),
 				Color(255, 255, 255), "\""
 			)
 			DiscordRelay.CachePost({
@@ -56,9 +56,9 @@ if SERVER then
 				body = string.format(
 					"%s incorrectly answered the brainlet `%s`, the right answer was `%s`, but they answered `%s`",
 					plr:Nick(),
-					outstandingBrainlets[plr].question,
-					outstandingBrainlets[plr].answer,
-					answer
+					TASUtils.URLDecode(outstandingBrainlets[plr].question),
+					TASUtils.URLDecode(outstandingBrainlets[plr].answer),
+					TASUtils.URLDecode(answer)
 				)
 			})
 			ULib.kick(plr, "You are officially a dumbass")
