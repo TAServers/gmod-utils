@@ -34,11 +34,11 @@ if SERVER then
 				team.GetColor(plr:Team()), plr:Nick(),
 				Color(255, 255, 255), " correctly answered the brainlet \"",
 				Color(240, 224, 86), outstandingBrainlets[plr].question,
-				Color(255, 255, 255), "\"!"
+				Color(255, 255, 255), "\""
 			)
 			DiscordRelay.CachePost({
 				type = "custom",
-				body = plr:Nick() .. " correctly answered the brainlet `" .. outstandingBrainlets[plr].question .. "`!"
+				body = plr:Nick() .. " correctly answered the brainlet `" .. outstandingBrainlets[plr].question .. "`"
 			})
 		else
 			TASUtils.Broadcast(
