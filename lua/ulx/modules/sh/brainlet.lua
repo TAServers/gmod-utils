@@ -16,6 +16,10 @@ if SERVER then
 			elseif curtime >= question.deadline then -- They've failed to answer the brainlet in time
 				outstandingBrainlets[plr] = nil
 				TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " failed to answer the brainlet in time")
+				DiscordRelay.CachePost({
+					type = "custom",
+					body = plr:Nick() .. " failed to answer the brainlet in time"
+				})
 				ULib.kick(plr, "You are officially a dumbass")
 			end
 		end
@@ -26,7 +30,16 @@ if SERVER then
 
 		local answer = net.ReadString()
 		if answer == outstandingBrainlets[plr].answer then
-			TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " correctly answered the brainlet!")
+			TASUtils.Broadcast(
+				team.GetColor(plr:Team()), plr:Nick(),
+				Color(255, 255, 255), " correctly answered the brainlet \"",
+				Color(240, 224, 86), outstandingBrainlets[plr].question,
+				Color(255, 255, 255), "\"!"
+			)
+			DiscordRelay.CachePost({
+				type = "custom",
+				body = plr:Nick() .. " correctly answered the brainlet `" .. outstandingBrainlets[plr].question .. "`!"
+			})
 		else
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
@@ -38,6 +51,16 @@ if SERVER then
 				Color(255, 91, 77), answer,
 				Color(255, 255, 255), "\""
 			)
+			DiscordRelay.CachePost({
+				type = "custom",
+				body = string.format(
+					"%s incorrectly answered the brainlet `%s`, the right answer was `%s`, but they answered `%s`",
+					plr:Nick(),
+					outstandingBrainlets[plr].question,
+					outstandingBrainlets[plr].answer,
+					answer
+				)
+			})
 			ULib.kick(plr, "You are officially a dumbass")
 		end
 
