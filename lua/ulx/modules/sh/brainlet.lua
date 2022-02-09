@@ -98,11 +98,8 @@ if SERVER then
 			-- question               : string
 			-- multipleChoice         : bool
 			-- if multipleChoice:
-			--     correctAnswer      : string
-			--     numIncorrectAnswers: uint8
-			--     incorrectAnswers   : string[numIncorrectAnswers]
-			-- else
-			--     correctAnswer      : bool
+			--     numAnswers         : uint8
+			--     answers            : string[numAnswers]
 			-- deadline               : float
 			net.Start("TASUtils.Brainlet")
 				net.WriteString(question.category)
