@@ -14,7 +14,7 @@ util.PrecacheModel(BASE_MODEL)
 
 if CLIENT then
 	-- Setup DHTML monitor
-	local url = "http://www.taservers.com/gmod/utils/servermonitor.html"
+	local url = "https://www.taservers.com/gmod/utils/servermonitor.html"
 	local rt = GetRenderTarget("TASUtils.ServerMonitor", 1024, 1024)
 	
 	local html = vgui.Create("DHTML")
