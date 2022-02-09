@@ -2290,4 +2290,3 @@ local htmlEntities_table = {
 function TASUtils.URLDecode(str)
 	return string.gsub(str, '&[%w#]-;', htmlEntities_table)
 end
-
