@@ -10,6 +10,7 @@ if curMapLocs and #curMapLocs > 0 then
 		local monitor = ents.Create("servermonitor")
 		monitor:SetPos(location[1])
 		monitor:SetAngles(location[2])
+		monitor:PhysicsDestroy()
 		monitor:Spawn()
 	end
 end
