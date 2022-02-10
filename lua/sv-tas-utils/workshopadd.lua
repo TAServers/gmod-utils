@@ -15,7 +15,7 @@ local addons = {
     "1231123967",
     "858829873",
     "1331399471",
-    "1525218777"
+    "1525218777", -- this comma was sacred you know
     "415143062", -- TFA Base
     "866368346" -- TFA Ins Shared Parts
 }
