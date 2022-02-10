@@ -1,5 +1,6 @@
 TASUtils = {}
 TASUtils.Materials = {}
+TASUtils.Category = "TAS Utilities"
 
 if SERVER then
 	AddCSLuaFile()

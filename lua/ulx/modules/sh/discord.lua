@@ -1,4 +1,4 @@
-local cmd = ulx.command("TAS Utilities", "ulx discord", function(plr)
+local cmd = ulx.command(TASUtils.Category, "ulx discord", function(plr)
 	if not IsValid(plr) then return end
 	plr:ChatPrint("discord.gg/XqxhqzS72R")
 end, "!discord")

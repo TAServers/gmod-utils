@@ -5,7 +5,7 @@ DEFINE_BASECLASS("base_anim")
 ENT.PrintName = "Server Monitor"
 ENT.Author = "Total Anarchy Servers"
 ENT.Purpose = "Displays server usage stats"
-ENT.Category = "TAS Utilities"
+ENT.Category = TASUtils.Category
 
 ENT.Spawnable = true
 

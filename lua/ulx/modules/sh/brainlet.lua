@@ -195,7 +195,7 @@ else
 end
 
 -- Register CMD
-local cmd = ulx.command("TAS Utilities", "ulx brainlet", brainlet, "!brainlet")
+local cmd = ulx.command(TASUtils.Category, "ulx brainlet", brainlet, "!brainlet")
 
 cmd:addParam({type = ULib.cmds.PlayerArg, hint = "Player to brainlet"})
 cmd:addParam({
