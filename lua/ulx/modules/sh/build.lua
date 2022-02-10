@@ -81,4 +81,3 @@ pvpCmd:addParam({
 
 pvpCmd:defaultAccess(ULib.ACCESS_ALL)
 pvpCmd:help("Changes the target player (or yourself if no target is specified) to PVP Mode")
-
