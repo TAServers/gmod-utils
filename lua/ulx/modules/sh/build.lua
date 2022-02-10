@@ -43,7 +43,7 @@ if SERVER then
 
 		target:SetMoveType(MOVETYPE_WALK)
 
-		buildModePlayers[target] = true
+		buildModePlayers[target] = nil
 		ulx.fancyLogAdmin(caller, caller == target and "#T exited build mode" or "#A made #T exit build mode", target)
 	end
 else
