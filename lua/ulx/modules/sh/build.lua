@@ -1,14 +1,13 @@
 local buildCB, pvpCB
+local buildModePlayers = {}
+
+hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
+	if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
+		return false
+	end
+end)
 
 if SERVER then
-	local buildModePlayers = {}
-
-	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
-		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
-			return false
-		end
-	end)
-
 	hook.Add("EntityTakeDamage", "TASUtils.BuildMode", function(target, dmgInfo)
 		-- Prevent build mode players from taking damage
 		if buildModePlayers[target] then
@@ -48,9 +47,11 @@ if SERVER then
 	end
 else
 	function buildCB(caller, target)
+		buildModePlayers[target] = true
 	end
 
 	function pvpCB(caller, target)
+		buildModePlayers[target] = nil
 	end
 end
 
@@ -62,7 +63,6 @@ local buildCmd = ulx.command(TASUtils.Category, "ulx build", buildCB, "!build")
 
 buildCmd:addParam({
 	type = ULib.cmds.PlayerArg,
-	target = "^",
 	default = "^",
 	ULib.cmds.optional
 })
@@ -74,7 +74,6 @@ local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", pvpCB, "!pvp")
 
 pvpCmd:addParam({
 	type = ULib.cmds.PlayerArg,
-	target = "^",
 	default = "^",
 	ULib.cmds.optional
 })
