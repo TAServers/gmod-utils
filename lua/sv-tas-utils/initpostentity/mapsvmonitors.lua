@@ -14,6 +14,7 @@ if curMapLocs and #curMapLocs > 0 then
 		monitor:SetPos(location[1])
 		monitor:SetAngles(location[2])
 		monitor:Spawn()
+		monitor:SetPersistent(true)
 		monitor:PhysicsDestroy()
 	end
 end
