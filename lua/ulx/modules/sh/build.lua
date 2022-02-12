@@ -8,12 +8,18 @@ hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
 end)
 
 if SERVER then
+	local max_force_convar = CreateConVar(
+		"buildmode_prop_max_force", 10000, FCVAR_ARCHIVE,
+		"Maximum force a builder's prop can have before it no longer collides with players",
+		0
+	)
+
 	local function negateDamage(dmgInfo)
 		dmgInfo:SetDamage(0)
 		dmgInfo:SetDamageForce(Vector(0))
 		dmgInfo:SetDamageType(DMG_PREVENT_PHYSICS_FORCE)
 	end
-	
+
 	hook.Add("EntityTakeDamage", "TASUtils.BuildMode", function(target, dmgInfo)
 		-- Prevent build mode players from taking damage
 		if buildModePlayers[target] then
@@ -28,7 +34,7 @@ if SERVER then
 		end
 
 		-- Prevent entities owned by build mode players from taking damage
-		local owner = not target:IsPlayer() and (target.CPPIGetOwner and target:CPPIGetOwner() or target:GetOwner())
+		local owner = (target and target:IsValid() and not target:IsPlayer()) and (target.CPPIGetOwner and target:CPPIGetOwner() or target:GetOwner())
 		if owner and buildModePlayers[owner] then
 			negateDamage(dmgInfo)
 			return
@@ -36,10 +42,38 @@ if SERVER then
 
 		-- Prevent entities owned by build mode players from dealing damage
 		local inflictor = dmgInfo:GetInflictor()
-		owner = not inflictor:IsPlayer() and (inflictor.CPPIGetOwner and inflictor:CPPIGetOwner() or inflictor:GetOwner())
+		owner = (inflictor and inflictor:IsValid() and not inflictor:IsPlayer()) and (inflictor.CPPIGetOwner and inflictor:CPPIGetOwner() or inflictor:GetOwner())
 		if owner and buildModePlayers[owner] then
 			negateDamage(dmgInfo)
 			return
+		end
+	end)
+
+	hook.Add("Think", "TASUtils.BuildMode", function()
+		-- Disable player collisions on all fast moving builder owned props (prevents uncombatable proppush)
+		if NADMOD then
+			local fMax = max_force_convar:GetFloat()
+			for _, prop in pairs(NADMOD.Props) do
+				local ent = prop.Ent
+				if ent and ent:IsValid() then
+					local phys = ent:GetPhysicsObject()
+					if phys:IsValid() then
+						local vMax2 = fMax * phys:GetInvMass()
+						vMax2 = vMax2 * vMax2
+
+						-- >= means frozen props will have no player cols (ie a builder cant place a prop over someone and freeze it, trapping them in)
+						if buildModePlayers[prop.Owner] and ent:GetVelocity():LengthSqr() >= vMax2 then
+							if not ent.TASOldColGroup then
+								ent.TASOldColGroup = ent:GetCollisionGroup()
+								ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
+							end
+						elseif ent.TASOldColGroup then
+							ent:SetCollisionGroup(ent.TASOldColGroup)
+							ent.TASOldColGroup = nil
+						end
+					end
+				end
+			end
 		end
 	end)
 
