@@ -4,4 +4,4 @@ local cleanupCmd = ulx.command(TASUtils.Category, "ulx cleanupdiscon", function(
     end
 end, "!cleanupdiscon")
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
-cleanupCmd:help("Cleans up all disconnected user props)
+cleanupCmd:help("Removes all props owned by disconnected players")
