@@ -8,22 +8,37 @@ hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
 end)
 
 if SERVER then
+	local function negateDamage(dmgInfo)
+		dmgInfo:SetDamage(0)
+		dmgInfo:SetDamageForce(Vector(0))
+		dmgInfo:SetDamageType(DMG_PREVENT_PHYSICS_FORCE)
+	end
+	
 	hook.Add("EntityTakeDamage", "TASUtils.BuildMode", function(target, dmgInfo)
 		-- Prevent build mode players from taking damage
 		if buildModePlayers[target] then
-			dmgInfo:SetDamage(0)
-			return
-		end
-
-		-- Prevent entities owned by build mode players from taking damage
-		if not target:IsPlayer() and target:CPPIGetOwner() and buildModePlayers[target:CPPIGetOwner()] then
-			dmgInfo:SetDamage(0)
+			negateDamage(dmgInfo)
 			return
 		end
 
 		-- Prevent players in build mode from dealing damage
 		if buildModePlayers[dmgInfo:GetAttacker()] then
-			dmgInfo:SetDamage(0)
+			negateDamage(dmgInfo)
+			return
+		end
+
+		-- Prevent entities owned by build mode players from taking damage
+		local owner = not target:IsPlayer() and (target.CPPIGetOwner and target:CPPIGetOwner() or target:GetOwner())
+		if owner and buildModePlayers[owner] then
+			negateDamage(dmgInfo)
+			return
+		end
+
+		-- Prevent entities owned by build mode players from dealing damage
+		local inflictor = dmgInfo:GetInflictor()
+		owner = not inflictor:IsPlayer() and (inflictor.CPPIGetOwner and inflictor:CPPIGetOwner() or inflictor:GetOwner())
+		if owner and buildModePlayers[owner] then
+			negateDamage(dmgInfo)
 			return
 		end
 	end)
