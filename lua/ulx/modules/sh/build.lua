@@ -1,14 +1,14 @@
 local gm = gmod.GetGamemode()
 local buildModePlayers = {}
 
-hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
-	if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
-		return false
-	end
-end)
-
 if SERVER then
 	util.AddNetworkString("TASUtils.BuildMode")
+
+	util.AddNetworkString("TASUtils.BuildModeTooltip")
+	local function triggerTooltip(plr)
+		net.Start("TASUtils.BuildModeTooltip")
+		net.Send(plr)
+	end
 
 	local max_force_convar = CreateConVar(
 		"buildmode_prop_max_force", 10000, FCVAR_ARCHIVE,
@@ -31,6 +31,7 @@ if SERVER then
 
 		-- Prevent players in build mode from dealing damage
 		if buildModePlayers[dmgInfo:GetAttacker()] then
+			triggerTooltip(dmgInfo:GetAttacker())
 			negateDamage(dmgInfo)
 			return
 		end
@@ -46,8 +47,15 @@ if SERVER then
 		local inflictor = dmgInfo:GetInflictor()
 		owner = (inflictor and inflictor:IsValid() and not inflictor:IsPlayer()) and (inflictor.CPPIGetOwner and inflictor:CPPIGetOwner() or inflictor:GetOwner())
 		if owner and buildModePlayers[owner] then
+			triggerTooltip(owner)
 			negateDamage(dmgInfo)
 			return
+		end
+	end)
+
+	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
+		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
+			return false
 		end
 	end)
 
@@ -79,24 +87,85 @@ if SERVER then
 		end
 	end)
 else -- CLIENT
-	hook.Add("PreDrawHalos", "TASUtils.BuildMode", function()
-		local plrs, count = {}, 0
-	
-		for plr, _ in pairs(buildModePlayers) do
-			if plr:Alive() then
-				count = count + 1
-				plrs[count] = plr
-			end
-		end
-	
-		halo.Add(plrs, Color(0, 0, 255), 0, 0, 1, true, false)
-	end)
+	local localPlr = LocalPlayer()
 
 	net.Receive("TASUtils.BuildMode", function()
 		if net.ReadBool() then
 			buildModePlayers[net.ReadEntity()] = true
 		else
 			buildModePlayers[net.ReadEntity()] = nil
+		end
+	end)
+
+	--[[
+		Build mode outline
+	]]
+	hook.Add("PreDrawHalos", "TASUtils.BuildMode", function()
+		local plrs, count = {}, 0
+
+		for plr, _ in pairs(buildModePlayers) do
+			if plr:Alive() then
+				count = count + 1
+				plrs[count] = plr
+			end
+		end
+
+		halo.Add(plrs, Color(0, 0, 255), 0, 0, 1, true, false)
+	end)
+
+	--[[
+		Tooltip Code
+	]]
+
+	local tooltipPos, tooltipFadeTime = {0.5, 0.46}, 2 -- Constants
+	local tooltip, tooltipColour, tooltipLastTrigger = "", Color(255, 255, 255), 0 -- Configurables
+
+	--- Equation for the fade effect
+	---@param t number Time (in seconds) since the tooltip was activated
+	---@return number alpha Alpha value to give the text
+	local function fade(t)
+		-- Make sure t is within bounds
+		if t > tooltipFadeTime then return 0 end
+		if t <= 0 then return 255 end
+
+		-- Normalise elapsed time to [0, 1]
+		t = t / tooltipFadeTime
+
+		local transparency = 1 - math.sqrt(1 - t * t)
+
+		return math.floor(transparency * -255 + 255)
+	end
+
+	hook.Add("HUDPaint", "TASUtils.BuildMode", function()
+		draw.DrawText(
+			tooltip, "DermaLarge",
+			ScrW() * tooltipPos[1], ScrH() * tooltipPos[2],
+			Color(tooltipColour.r, tooltipColour.g, tooltipColour.b, fade(CurTime() - tooltipLastTrigger)),
+			TEXT_ALIGN_CENTER
+		)
+	end)
+
+	--[[
+		Server triggered tooltips
+	]]
+	net.Receive("TASUtils.BuildModeTooltip", function()
+		-- As of now the only tooltip the server could ever want to show is for builders dealing damage
+		tooltip = "You cannot deal damage while in build mode, exit with !pvp"
+		tooltipColour = Color(30, 30, 180)
+		tooltipLastTrigger = CurTime()
+	end)
+
+	--[[
+		Noclip prevention
+	]]
+	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
+		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
+			if plr == localPlr then
+				tooltip = "You cannot noclip while in pvp, enter build mode with !build"
+				tooltipColour = Color(180, 30, 30)
+				tooltipLastTrigger = CurTime()
+			end
+			return false
 		end
 	end)
 end
