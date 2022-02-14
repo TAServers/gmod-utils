@@ -8,6 +8,8 @@ hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
 end)
 
 if SERVER then
+	util.AddNetworkString("TASUtils.BuildMode")
+
 	local max_force_convar = CreateConVar(
 		"buildmode_prop_max_force", 10000, FCVAR_ARCHIVE,
 		"Maximum force a builder's prop can have before it no longer collides with players",
@@ -76,39 +78,46 @@ if SERVER then
 			end
 		end
 	end)
+else -- CLIENT
+	hook.Add("PreDrawHalos", "TASUtils.BuildMode", function()
+		local plrs, count = {}, 0
+	
+		for plr, _ in pairs(buildModePlayers) do
+			if plr:Alive() then
+				count = count + 1
+				plrs[count] = plr
+			end
+		end
+	
+		halo.Add(plrs, Color(0, 0, 255), 0, 0, 1, true, false)
+	end)
 
-	function buildCB(caller, target)
-		if not IsValid(target) then return end
-		if buildModePlayers[target] then return end
-
-		buildModePlayers[target] = true
-		ulx.fancyLogAdmin(caller, caller == target and "#T entered build mode" or "#A made #T enter build mode", target)
-	end
-
-	function pvpCB(caller, target)
-		if not IsValid(target) then return end
-		if not buildModePlayers[target] then return end
-
-		target:SetMoveType(MOVETYPE_WALK)
-
-		buildModePlayers[target] = nil
-		ulx.fancyLogAdmin(caller, caller == target and "#T exited build mode" or "#A made #T exit build mode", target)
-	end
-else
-	function buildCB(caller, target)
-		buildModePlayers[target] = true
-	end
-
-	function pvpCB(caller, target)
-		buildModePlayers[target] = nil
-	end
+	net.Receive("TASUtils.BuildMode", function()
+		if net.ReadBool() then
+			buildModePlayers[net.ReadEntity()] = true
+		else
+			buildModePlayers[net.ReadEntity()] = nil
+		end
+	end)
 end
 
 --[[
 	Register Commands
 ]]
 
-local buildCmd = ulx.command(TASUtils.Category, "ulx build", buildCB, "!build")
+local buildCmd = ulx.command(TASUtils.Category, "ulx build", function(caller, target)
+	print("build")
+	if not IsValid(target) then return end
+	if buildModePlayers[target] then return end
+
+	buildModePlayers[target] = true
+	net.Start("TASUtils.BuildMode")
+	net.WriteBool(true)
+	net.WriteEntity(target)
+	net.Broadcast()
+
+	ulx.fancyLogAdmin(caller, caller == target and "#T entered build mode" or "#A made #T enter build mode", target)
+end, "!build")
 
 buildCmd:addParam({
 	type = ULib.cmds.PlayerArg,
@@ -119,7 +128,21 @@ buildCmd:addParam({
 buildCmd:defaultAccess(ULib.ACCESS_ALL)
 buildCmd:help("Changes the target player (or yourself if no target is specified) to Build Mode")
 
-local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", pvpCB, "!pvp")
+local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target)
+	print("pvp")
+	if not IsValid(target) then return end
+	if not buildModePlayers[target] then return end
+
+	target:SetMoveType(MOVETYPE_WALK)
+
+	buildModePlayers[target] = nil
+	net.Start("TASUtils.BuildMode")
+	net.WriteBool(false)
+	net.WriteEntity(target)
+	net.Broadcast()
+
+	ulx.fancyLogAdmin(caller, caller == target and "#T exited build mode" or "#A made #T exit build mode", target)
+end, "!pvp")
 
 pvpCmd:addParam({
 	type = ULib.cmds.PlayerArg,
