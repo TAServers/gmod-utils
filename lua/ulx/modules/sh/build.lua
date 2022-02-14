@@ -1,4 +1,4 @@
-local buildCB, pvpCB
+local gm = gmod.GetGamemode()
 local buildModePlayers = {}
 
 hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
@@ -134,6 +134,10 @@ local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target
 	if not buildModePlayers[target] then return end
 
 	target:SetMoveType(MOVETYPE_WALK)
+	local spawnpoint = hook.Call("PlayerSelectSpawn", gm, target, false)
+	if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
+		target:SetPos(spawnpoint:GetPos())
+	end
 
 	buildModePlayers[target] = nil
 	net.Start("TASUtils.BuildMode")
