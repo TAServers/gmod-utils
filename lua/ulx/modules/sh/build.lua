@@ -105,10 +105,28 @@ end
 	Register Commands
 ]]
 
+-- For chatprints
+local ulxEchoColour = Color(151, 211, 255)
+local ulxSelfColour = Color(75, 0, 130)
+
 local buildCmd = ulx.command(TASUtils.Category, "ulx build", function(caller, target)
 	print("build")
 	if not IsValid(target) then return end
-	if buildModePlayers[target] then return end
+	if buildModePlayers[target] then
+		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
+			if IsValid(caller) then
+				if caller == target then
+					caller:ChatPrint(ulxSelfColour, "You", ulxEchoColour, " are already in build mode")
+				else
+					caller:ChatPrint(team.GetColor(target:Team()), target:Nick(), ulxEchoColour, " is already in build mode")
+				end
+			else -- Caller is console
+				print(target:Nick() .. " is already in build mode")
+			end
+		end)
+
+		return
+	end
 
 	buildModePlayers[target] = true
 	net.Start("TASUtils.BuildMode")
@@ -131,7 +149,21 @@ buildCmd:help("Changes the target player (or yourself if no target is specified)
 local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target)
 	print("pvp")
 	if not IsValid(target) then return end
-	if not buildModePlayers[target] then return end
+	if not buildModePlayers[target] then
+		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
+			if IsValid(caller) then
+				if caller == target then
+					caller:ChatPrint(ulxSelfColour, "You", ulxEchoColour, " are already out of build mode")
+				else
+					caller:ChatPrint(team.GetColor(target:Team()), target:Nick(), ulxEchoColour, " is already out of build mode")
+				end
+			else -- Caller is console
+				print(target:Nick() .. " is already out of build mode")
+			end
+		end)
+
+		return
+	end
 
 	target:SetMoveType(MOVETYPE_WALK)
 	local spawnpoint = hook.Call("PlayerSelectSpawn", gm, target, false)
