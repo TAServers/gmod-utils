@@ -2,7 +2,51 @@ local opentdb = TASUtils.OpenTDB
 if not opentdb then error("ULX loads modules before TASUtils") end
 local brainlet = function() end
 
+local DiscordRelay = {CachePost = function() end}
+
 if SERVER then
+	--[[
+		Colour scheme
+	]]
+	local ColourScheme = {
+		Default = Color(255, 255, 255),
+		Parameter = Color(240, 224, 86),
+		Good = Color(80, 255, 80),
+		Bad = Color(255, 80, 80)
+	}
+
+	--[[
+		Streak tracking
+	]]
+	local DB_NAME = "tasutils_brainlet_streaks"
+	sql.Query("CREATE TABLE IF NOT EXISTS ".. DB_NAME .."(id INTEGER, streak INTEGER);")
+
+	local function streakExists(plr)
+		local r = sql.Query(string.format("SELECT 1 FROM %s WHERE id = %u;", DB_NAME, plr:SteamID64()))
+		if r then return true else return false end
+	end
+
+	local function streakAdd(plr)
+		if not streakExists(plr) then
+			sql.Query(string.format(
+				"INSERT INTO %s(id, streak) VALUES(%u, %u);", DB_NAME,
+				plr:SteamID64(), 1
+			))
+		else
+			sql.Query(string.format("UPDATE %s SET streak = streak + 1 WHERE id = %u;", DB_NAME, plr:SteamID64()))
+		end
+	end
+
+	local function streakRemove(plr)
+		if not streakExists(plr) then return end
+		sql.Query(string.format("DELETE FROM %s WHERE id = %u;", DB_NAME, plr:SteamID64()))
+	end
+
+	local function streakGet(plr)
+		if not streakExists(plr) then return 0 end
+		return sql.QueryValue(string.format("SELECT streak FROM %s WHERE id = %u;", DB_NAME, plr:SteamID64()))
+	end
+
 	util.AddNetworkString("TASUtils.Brainlet")
 	local questionTime = CreateConVar("brainlet_time", 30, FCVAR_ARCHIVE, "Number of seconds users get to answer a question", 1)
 	local outstandingBrainlets = {}
@@ -15,12 +59,17 @@ if SERVER then
 				outstandingBrainlets[plr] = nil
 			elseif curtime >= question.deadline then -- They've failed to answer the brainlet in time
 				outstandingBrainlets[plr] = nil
-				TASUtils.Broadcast(team.GetColor(plr:Team()), plr:Nick(), Color(255, 255, 255), " failed to answer the brainlet in time")
+				TASUtils.Broadcast(
+					team.GetColor(plr:Team()), plr:Nick(),
+					ColourScheme.Default, " failed to answer the brainlet in time, their streak was ",
+					ColourScheme.Parameter, streakGet(plr)
+				)
 				DiscordRelay.CachePost({
 					type = "custom",
-					body = plr:Nick() .. " failed to answer the brainlet in time"
+					body = plr:Nick() .. " failed to answer the brainlet in time, their streak was " .. tostring(streakGet(plr))
 				})
-				ULib.kick(plr, "You are officially a dumbass")
+				ULib.kick(plr, "You are officially a dumbass, your win streak was " .. tostring(streakGet(plr)))
+				streakRemove(plr)
 			end
 		end
 	end)
@@ -32,36 +81,40 @@ if SERVER then
 		if answer == outstandingBrainlets[plr].answer then
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
-				Color(255, 255, 255), " correctly answered the brainlet \"",
-				Color(240, 224, 86), TASUtils.URLDecode(outstandingBrainlets[plr].question),
-				Color(255, 255, 255), "\""
+				ColourScheme.Default, " correctly answered the brainlet \"",
+				ColourScheme.Parameter, TASUtils.URLDecode(outstandingBrainlets[plr].question),
+				ColourScheme.Default, "\""
 			)
 			DiscordRelay.CachePost({
 				type = "custom",
 				body = plr:Nick() .. " correctly answered the brainlet `" .. TASUtils.URLDecode(outstandingBrainlets[plr].question) .. "`"
 			})
+			streakAdd(plr)
 		else
 			TASUtils.Broadcast(
 				team.GetColor(plr:Team()), plr:Nick(),
-				Color(255, 255, 255), " incorrectly answered the brainlet \"",
-				Color(240, 224, 86), TASUtils.URLDecode(outstandingBrainlets[plr].question),
-				Color(255, 255, 255), "\", the right answer was \"",
-				Color(77, 255, 80), TASUtils.URLDecode(outstandingBrainlets[plr].answer),
-				Color(255, 255, 255), "\", but they answered \"",
-				Color(255, 91, 77), TASUtils.URLDecode(answer),
-				Color(255, 255, 255), "\""
+				ColourScheme.Default, " incorrectly answered the brainlet \"",
+				ColourScheme.Parameter, TASUtils.URLDecode(outstandingBrainlets[plr].question),
+				ColourScheme.Default, "\", the right answer was \"",
+				ColourScheme.Good, TASUtils.URLDecode(outstandingBrainlets[plr].answer),
+				ColourScheme.Default, "\", but they answered \"",
+				ColourScheme.Bad, TASUtils.URLDecode(answer),
+				ColourScheme.Default, "\", their streak was ",
+				ColourScheme.Parameter, streakGet(plr)
 			)
 			DiscordRelay.CachePost({
 				type = "custom",
 				body = string.format(
-					"%s incorrectly answered the brainlet `%s`, the right answer was `%s`, but they answered `%s`",
+					"%s incorrectly answered the brainlet `%s`, the right answer was `%s`, but they answered `%s`, their streak was %u",
 					plr:Nick(),
 					TASUtils.URLDecode(outstandingBrainlets[plr].question),
 					TASUtils.URLDecode(outstandingBrainlets[plr].answer),
-					TASUtils.URLDecode(answer)
+					TASUtils.URLDecode(answer),
+					streakGet(plr)
 				)
 			})
-			ULib.kick(plr, "You are officially a dumbass")
+			ULib.kick(plr, "You are officially a dumbass, your win streak was " .. tostring(streakGet(plr)))
+			streakRemove(plr)
 		end
 
 		outstandingBrainlets[plr] = nil
