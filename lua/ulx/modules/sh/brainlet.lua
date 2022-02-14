@@ -2,8 +2,6 @@ local opentdb = TASUtils.OpenTDB
 if not opentdb then error("ULX loads modules before TASUtils") end
 local brainlet = function() end
 
-local DiscordRelay = {CachePost = function() end}
-
 if SERVER then
 	--[[
 		Colour scheme
