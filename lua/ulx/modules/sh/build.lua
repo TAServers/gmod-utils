@@ -1,6 +1,10 @@
 local gm = gmod.GetGamemode()
 local buildModePlayers = {}
 
+FindMetaTable("Player").HasBuildMode = function(self)
+	if self and buildModePlayers[self] then return true else return false end
+end
+
 if SERVER then
 	util.AddNetworkString("TASUtils.BuildMode")
 
