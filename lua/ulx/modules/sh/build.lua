@@ -101,6 +101,44 @@ if SERVER then
 			net.Broadcast()
 		end
 	end)
+
+	FindMetaTable("Player").BuildEnable = function(self)
+		if not self or not IsEntity(self) or not self:IsValid() or not self:IsPlayer() then
+			error("Attempted to use invalid player")
+		end
+		if buildModePlayers[self] then return end
+
+		buildModePlayers[self] = true
+		net.Start("TASUtils.BuildMode")
+		net.WriteBool(true)
+		net.WriteEntity(self)
+		net.Broadcast()
+	end
+
+	FindMetaTable("Player").BuildDisable = function(self)
+		if not self or not IsEntity(self) or not self:IsValid() or not self:IsPlayer() then
+			error("Attempted to use invalid player")
+		end
+		if not buildModePlayers[self] then return end
+
+		self:SetMoveType(MOVETYPE_WALK)
+		self:SetHealth(self:GetMaxHealth())
+		self:SetArmor(0)
+		self:SetWalkSpeed(200)
+		self:SetRunSpeed(400)
+
+		local spawnpoint = hook.Call("PlayerSelectSpawn", gm, self, false)
+		if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
+			self:SetPos(spawnpoint:GetPos())
+			self:SetEyeAngles(spawnpoint:GetAngles())
+		end
+
+		buildModePlayers[self] = nil
+		net.Start("TASUtils.BuildMode")
+		net.WriteBool(false)
+		net.WriteEntity(self)
+		net.Broadcast()
+	end
 else -- CLIENT
 	net.Receive("TASUtils.BuildMode", function()
 		if net.ReadBool() then
@@ -177,7 +215,7 @@ else -- CLIENT
 		Noclip prevention
 	]]
 	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
-		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
+		if not plr:HasBuildMode() and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
 			if plr == LocalPlayer() then
 				tooltip = "You cannot noclip while in pvp, enter build mode with !build"
 				tooltipColour = Color(180, 30, 30)
@@ -198,7 +236,7 @@ local ulxSelfColour = Color(75, 0, 130)
 
 local buildCmd = ulx.command(TASUtils.Category, "ulx build", function(caller, target)
 	if not IsValid(target) then return end
-	if buildModePlayers[target] then
+	if target:HasBuildMode() then
 		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
 			if IsValid(caller) then
 				if caller == target then
@@ -214,11 +252,7 @@ local buildCmd = ulx.command(TASUtils.Category, "ulx build", function(caller, ta
 		return
 	end
 
-	buildModePlayers[target] = true
-	net.Start("TASUtils.BuildMode")
-	net.WriteBool(true)
-	net.WriteEntity(target)
-	net.Broadcast()
+	target:BuildEnable()
 
 	ulx.fancyLogAdmin(caller, caller == target and "#T entered build mode" or "#A made #T enter build mode", target)
 end, "!build")
@@ -234,7 +268,7 @@ buildCmd:help("Changes the target player (or yourself if no target is specified)
 
 local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target)
 	if not IsValid(target) then return end
-	if not buildModePlayers[target] then
+	if not target:HasBuildMode() then
 		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
 			if IsValid(caller) then
 				if caller == target then
@@ -250,22 +284,7 @@ local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target
 		return
 	end
 
-	target:SetMoveType(MOVETYPE_WALK)
-	target:SetHealth(target:GetMaxHealth())
-	target:SetArmor(0)
-	target:SetMoveSpeed(200)
-	target:SetRunSpeed(400)
-	
-	local spawnpoint = hook.Call("PlayerSelectSpawn", gm, target, false)
-	if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
-		target:SetPos(spawnpoint:GetPos())
-	end
-
-	buildModePlayers[target] = nil
-	net.Start("TASUtils.BuildMode")
-	net.WriteBool(false)
-	net.WriteEntity(target)
-	net.Broadcast()
+	target:BuildDisable()
 
 	ulx.fancyLogAdmin(caller, caller == target and "#T exited build mode" or "#A made #T exit build mode", target)
 end, "!pvp")
