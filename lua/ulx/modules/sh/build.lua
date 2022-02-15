@@ -93,13 +93,11 @@ if SERVER then
 			buildModePlayers[plr] = nil
 			net.Start("TASUtils.BuildMode")
 			net.WriteBool(false)
-			net.WriteEntity(target)
+			net.WriteEntity(plr)
 			net.Broadcast()
 		end
 	end)
 else -- CLIENT
-	local localPlr = LocalPlayer()
-
 	net.Receive("TASUtils.BuildMode", function()
 		if net.ReadBool() then
 			buildModePlayers[net.ReadEntity()] = true
@@ -127,6 +125,11 @@ else -- CLIENT
 	--[[
 		Tooltip Code
 	]]
+	
+	surface.CreateFont("TASUtils.BuildModeTooltip", {
+		font = "Roboto",
+		size = 24
+	})
 
 	local tooltipPos, tooltipFadeTime = {0.5, 0.46}, 2 -- Constants
 	local tooltip, tooltipColour, tooltipLastTrigger = "", Color(255, 255, 255), 0 -- Configurables
@@ -149,7 +152,7 @@ else -- CLIENT
 
 	hook.Add("HUDPaint", "TASUtils.BuildMode", function()
 		draw.DrawText(
-			tooltip, "CloseCaption_Normal",
+			tooltip, "TASUtils.BuildModeTooltip",
 			ScrW() * tooltipPos[1], ScrH() * tooltipPos[2],
 			Color(tooltipColour.r, tooltipColour.g, tooltipColour.b, fade(CurTime() - tooltipLastTrigger)),
 			TEXT_ALIGN_CENTER
@@ -171,7 +174,7 @@ else -- CLIENT
 	]]
 	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
 		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
-			if plr == localPlr then
+			if plr == LocalPlayer() then
 				tooltip = "You cannot noclip while in pvp, enter build mode with !build"
 				tooltipColour = Color(180, 30, 30)
 				tooltipLastTrigger = CurTime()
