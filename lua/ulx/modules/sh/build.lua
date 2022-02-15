@@ -190,7 +190,6 @@ local ulxEchoColour = Color(151, 211, 255)
 local ulxSelfColour = Color(75, 0, 130)
 
 local buildCmd = ulx.command(TASUtils.Category, "ulx build", function(caller, target)
-	print("build")
 	if not IsValid(target) then return end
 	if buildModePlayers[target] then
 		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
@@ -227,7 +226,6 @@ buildCmd:defaultAccess(ULib.ACCESS_ALL)
 buildCmd:help("Changes the target player (or yourself if no target is specified) to Build Mode")
 
 local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target)
-	print("pvp")
 	if not IsValid(target) then return end
 	if not buildModePlayers[target] then
 		timer.Simple(0, function() -- Delay the print by a frame so it comes *after* the chat msg
