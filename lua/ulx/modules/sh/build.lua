@@ -86,6 +86,17 @@ if SERVER then
 			end
 		end
 	end)
+
+	-- Remove players from the buildmode table if they're leaving
+	hook.Add("PlayerDisconnected", "TASUtils.BuildMode", function(plr)
+		if buildModePlayers[plr] then
+			buildModePlayers[plr] = nil
+			net.Start("TASUtils.BuildMode")
+			net.WriteBool(false)
+			net.WriteEntity(target)
+			net.Broadcast()
+		end
+	end)
 else -- CLIENT
 	local localPlr = LocalPlayer()
 
@@ -104,7 +115,7 @@ else -- CLIENT
 		local plrs, count = {}, 0
 
 		for plr, _ in pairs(buildModePlayers) do
-			if plr:Alive() then
+			if plr:IsValid() and plr:Alive() then
 				count = count + 1
 				plrs[count] = plr
 			end
@@ -138,7 +149,7 @@ else -- CLIENT
 
 	hook.Add("HUDPaint", "TASUtils.BuildMode", function()
 		draw.DrawText(
-			tooltip, "DermaLarge",
+			tooltip, "CloseCaption_Normal",
 			ScrW() * tooltipPos[1], ScrH() * tooltipPos[2],
 			Color(tooltipColour.r, tooltipColour.g, tooltipColour.b, fade(CurTime() - tooltipLastTrigger)),
 			TEXT_ALIGN_CENTER
