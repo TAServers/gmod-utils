@@ -251,6 +251,11 @@ local pvpCmd = ulx.command(TASUtils.Category, "ulx pvp", function(caller, target
 	end
 
 	target:SetMoveType(MOVETYPE_WALK)
+	target:SetHealth(target:GetMaxHealth())
+	target:SetArmor(0)
+	target:SetMoveSpeed(200)
+	target:SetRunSpeed(400)
+	
 	local spawnpoint = hook.Call("PlayerSelectSpawn", gm, target, false)
 	if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
 		target:SetPos(spawnpoint:GetPos())
