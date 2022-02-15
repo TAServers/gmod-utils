@@ -5,7 +5,7 @@ entMeta.Remove = function(self)
 
 	if self:GetClass() == "info_player_start" then
 		TASUtils.Broadcast("Something just deleted a spawnpoint entity, check the console for a traceback")
-		print("\n=================\nTRACEBACK\n=================")
+		print("\n\n\n=================\nTRACEBACK\n=================")
 		debug.Trace()
 	end
 
