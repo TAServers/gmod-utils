@@ -8,8 +8,10 @@ end)
 
 hook.Add("PlayerSpawn", "TASUtils.SpawnHandler", function(plr, transition)
 	local spawnent = hook.Call("PlayerSelectSpawn", gm, plr, transition)
-	if spawnent and IsEntity(spawnent) and spawnent:IsValid() then
-		plr:SetPos(spawnent:GetPos())
-		plr:SetEyeAngles(spawnent:GetAngles())
-	end
+	timer.Simple(0, function()
+		if spawnent and IsEntity(spawnent) and spawnent:IsValid() then
+			plr:SetPos(spawnent:GetPos())
+			plr:SetEyeAngles(spawnent:GetAngles())
+		end
+	end)
 end)
