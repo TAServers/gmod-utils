@@ -2,7 +2,7 @@ local cleanupCmd = ulx.command(TASUtils.Category, "ulx cleanupdiscon", function(
     if NADMOD then
         NADMOD.CDP(calling_ply, "", {})
     end
-    ulx.fancyLogAdmin(ply, "#A cleaned up disconnected players props.")
+    ulx.fancyLogAdmin(ply, "#A cleaned up disconnected players props")
 end, "!cleanupdiscon")
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help("Removes all props owned by disconnected players")
