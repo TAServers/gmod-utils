@@ -57,6 +57,10 @@ if SERVER then
 		end
 	end)
 
+	hook.Add("PlayerShouldTakeDamage", "TASUtils.BuildMode", function(plr, attacker)
+		if plr:HasBuildMode() or (attacker:IsPlayer() and attacker:HasBuildMode()) then return false end
+	end)
+
 	hook.Add("PlayerNoClip", "TASUtils.BuildMode", function(plr, desiredNoClipState)
 		if not buildModePlayers[plr] and desiredNoClipState then -- desiredNoClipState check in case a user somehow gets into noclip while in PVP and tries to disable it
 			return false
