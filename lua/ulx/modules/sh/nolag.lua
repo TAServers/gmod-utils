@@ -1,6 +1,6 @@
 -- Freezes all non-world entities, or entities from a specific target
 ---@param caller Player Person who called this command
----@param targets? Player[] Players to freeze props of
+---@param targets Player[] Players to freeze props of
 local function nolag(caller, targets)
     if not NADMOD then return end -- We should always have NADMOD installed, so the sanity check just needs to return
 
