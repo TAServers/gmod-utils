@@ -27,7 +27,7 @@ local nolagCmd = ulx.command(TASUtils.Category, "ulx nolag", nolagLogic, "!nolag
 nolagCmd:defaultAccess(ULib.ACCESS_ADMIN)
 nolagCmd:help("Freezes entities on the server")
 nolagCmd:addParam({
-	type = ULib.cmds.PlayerArg,
+	type = ULib.cmds.PlayersArg,
 	default = "*",
 	ULib.cmds.optional
 })
