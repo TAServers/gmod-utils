@@ -1,4 +1,4 @@
--- Freezes all non-world entities, or entities from a specific target
+-- Freezes all non-world entities, or entities from a specific set of targets
 ---@param caller Player Person who called this command
 ---@param targets Player[] Players to freeze props of
 local function nolag(caller, targets)
