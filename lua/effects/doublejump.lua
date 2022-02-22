@@ -17,9 +17,8 @@ function EFFECT:Init(data)
 		particle:SetEndAlpha(0)
 		particle:SetDieTime(1)
 		particle:SetGravity(Vector(0, 0, -20))
-		-- Negated hemisphere
+		-- Half cube, spreads the particles out in a fashion that looks like a puff of air
 		particle:SetVelocity(Vector(math.Rand(-1, 1), math.Rand(-1, 1), -math.Rand(0, 1)) * 210)
-		particle:SetCollide(true)
 	end
 
 	emitter:Finish()
