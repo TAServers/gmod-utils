@@ -10,7 +10,7 @@ AddCSLuaFile("effects/doublejump.lua")
 
 -- The star of the script
 local function onDoubleJump(ply)
-	-- This sends the plater primarily flying upwards, but also adds some forward velocity
+	-- This sends the player primarily flying upwards, but also adds some forward velocity
 	local doubleJumpPower = ply:GetJumpPower() * ply:GetPhysicsObject():GetMass() * POWER_INCREASE
 	local forwardVector = ply:GetAimVector() * FORWARD_INFLUENCE
 
