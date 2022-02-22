@@ -1,4 +1,3 @@
-
 function EFFECT:Init(data)
 	self.position = data:GetOrigin()
 	self.particles = 24
