@@ -1,4 +1,4 @@
-local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function()
+local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function(calling_ply)
     for _, ent in pairs(ents.FindByClass("gib")) do
         SafeRemoveEntity(ent)
     end
