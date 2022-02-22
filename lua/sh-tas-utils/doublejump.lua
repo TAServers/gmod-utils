@@ -31,17 +31,10 @@ local function onDoubleJump(ply)
 end
 
 local function onKeyPress(ply, btn)
-	-- If we jump, check if its a double jump
-	if btn == IN_JUMP then
-		local isDoubleJump = not ply:OnGround() and not ply.doubleJumped 
-
-		if isDoubleJump then
-			ply.doubleJumped = true
-			onDoubleJump(ply)
-		else
-			-- Normal jump, record it
-			ply.lastJump = CurTime()
-		end
+	-- If we jump, check if its a double jump, which only occurrs mid-air
+	if btn == IN_JUMP and not ply:OnGround() and not ply.doubleJumped then
+		ply.doubleJumped = true
+		onDoubleJump(ply)
 	end
 end
 
