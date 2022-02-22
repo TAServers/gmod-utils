@@ -1,5 +1,3 @@
--- How long it has to be before a player may double jump, this helps immediate double jump issues
-local DOUBLE_JUMP_TIME = 0.03
 -- How much to add forward velocity (adds much more of a "leap" feel)
 local FORWARD_INFLUENCE = 256
 -- How much more power to let the double jump have
@@ -10,7 +8,7 @@ AddCSLuaFile("effects/doublejump.lua")
 
 -- The star of the script
 local function onDoubleJump(ply)
-	-- This sends the plater primarily flying upwards, but also adds some forward velocity
+	-- This sends the player primarily flying upwards, but also adds some forward velocity
 	local doubleJumpPower = ply:GetJumpPower() * POWER_INCREASE
 	local forwardVector = ply:GetAimVector() * FORWARD_INFLUENCE
 
