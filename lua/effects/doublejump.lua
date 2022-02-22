@@ -28,11 +28,10 @@ end
 
 function EFFECT:Think()
 	-- A small little bit of light
-	local deltaTime = CurTime() / self.endTime
 	local light = DynamicLight(self.ent:EntIndex())
 	light.pos = self.position
 	light.Size = 100
-	light.brightness = 2 * (1 - deltaTime)
+	light.brightness = 2 
 	light.r = 190
 	light.g = 190
 	light.b = 255
@@ -41,5 +40,4 @@ function EFFECT:Think()
 	return self.endTime > CurTime()
 end
 
-function EFFECT:Render()
-end	
+function EFFECT:Render() end
