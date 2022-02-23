@@ -7,12 +7,12 @@ local POWER_INCREASE = 1.5
 AddCSLuaFile("effects/doublejump.lua")
 
 -- The star of the script
-local function onDoubleJump(ply)
+local function onDoubleJump(ply, move)
 	-- This sends the player primarily flying upwards, but also adds some forward velocity
 	local doubleJumpPower = ply:GetJumpPower() * POWER_INCREASE
 	local forwardVector = ply:GetAimVector() * FORWARD_INFLUENCE
 
-	ply:SetVelocity(Vector(0, 0, doubleJumpPower) + forwardVector)
+	move:SetVelocity(move:GetVelocity() + Vector(0, 0, doubleJumpPower) + forwardVector)
 
 	-- Play a little effect when we jump
 	-- We also still need this on server even on shared, because this will replicate other players' effects
@@ -30,15 +30,15 @@ local function onDoubleJump(ply)
 	util.Effect("doublejump", fxData, true, recipients)
 end
 
-local function onKeyPress(ply, btn)
-	-- If we jump, check if its a double jump, which only occurrs mid-air
-	if btn == IN_JUMP and not ply:OnGround() and not ply.doubleJumped then
-		ply.doubleJumped = true
-		onDoubleJump(ply)
+local function onSetupMove(ply, move)
+	-- Check if the move has a jump command, and check if its a double jump
+	if move:KeyPressed(IN_JUMP) and not ply:OnGround() and not ply.doubleJumped then
+		ply.doubleJumped = true 
+		onDoubleJump(ply, move)
 	end
 end
 
-hook.Add("KeyPress", "TASUtils.DoubleJumpDetect", onKeyPress)
+hook.Add("SetupMove", "TASUtils.DoubleJumpDetect", onSetupMove)
 hook.Add("OnPlayerHitGround", "TASUtils.DoubleJumpReset", function(ply)
 	-- Simply reset their double jump flag, not enough to move it into its own function
 	ply.doubleJumped = false
