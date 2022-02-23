@@ -1,8 +1,8 @@
-local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function()
+local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function(calling_ply)
     for _, ent in pairs(ents.FindByClass("gib")) do
         SafeRemoveEntity(ent)
     end
-    ulx.fancyLogAdmin(ply, "#A cleaned up gibs")
+    ulx.fancyLogAdmin(calling_ply, "#A cleaned up gibs")
 end, "!cleangibs")
 
 cleanGibsCmd:defaultAccess(ULib.ACCESS_ADMIN)
