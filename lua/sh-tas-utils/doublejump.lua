@@ -6,7 +6,7 @@ local POWER_INCREASE = 2
 -- Make sure clients also get our effect
 AddCSLuaFile("effects/doublejump.lua")
 
-hook.Add("SetupMove", "TASUtils.DoubleJump", function(ply, move)
+hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 	-- Check if the move has a jump command, and check if its a double jump
 	if move:KeyPressed(IN_JUMP) and not ply:OnGround() and not ply.doubleJumped then
 		-- A double jump has been initiated
