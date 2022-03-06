@@ -1,4 +1,4 @@
-local TYPES = {"gib","item_*","debris","helicopter_chunk"}
+local TYPES = {"gib","item_*","debris","helicopter_chunk","weapon_*","prop_combine_ball","prop_ragdoll"}
 local Count = 0
 
 local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function(calling_ply)
