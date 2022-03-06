@@ -6,7 +6,7 @@ local Count = 0
 local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function(calling_ply)
     for _, class in ipairs(TYPES) do
         for _, ent in ipairs(ents.FindByClass(class)) do
-            if ent:IsValid() and ent:GetOwner() ~= NULL then -- i understand null is undefined, but it works :person_shrugging:
+            if ent:IsValid() and ent:GetOwner() == NULL then -- i understand null is undefined, but it works :person_shrugging:
                 SafeRemoveEntity(ent)
                 Count = Count + 1
             end
