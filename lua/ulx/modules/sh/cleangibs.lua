@@ -4,8 +4,10 @@ local Count = 0
 local cleanGibsCmd = ulx.command(TASUtils.Category, "ulx cleangibs", function(calling_ply)
     for _, class in ipairs(TYPES) do
         for _, ent in ipairs(ents.FindByClass(class)) do
-            SafeRemoveEntity(ent)
-            Count = Count + 1
+            if ent:GetOwner() ~= nil then
+                SafeRemoveEntity(ent)
+                Count = Count + 1
+            end
         end
     end
     ulx.fancyLogAdmin(calling_ply, "#A cleaned up #i gibs", Count)
