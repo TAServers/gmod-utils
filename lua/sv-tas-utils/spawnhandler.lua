@@ -7,11 +7,8 @@ hook.Add("PlayerSelectSpawn", "TASUtils.SpawnHandler", function(plr)
 end)
 
 hook.Add("PlayerSpawn", "TASUtils.SpawnHandler", function(plr, transition)
-	local spawnent = hook.Call("PlayerSelectSpawn", gm, plr, transition)
 	timer.Simple(0, function()
-		if spawnent and IsEntity(spawnent) and spawnent:IsValid() then
-			plr:SetPos(spawnent:GetPos())
-			plr:SetEyeAngles(spawnent:GetAngles())
-		end
+		-- For some reason, some unknown addon or cursed LGSM bug sets the movetype to a frozen one - causing the player to be frozen
+		plr:SetMoveType(MOVETYPE_WALK)
 	end)
 end)
