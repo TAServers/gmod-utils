@@ -40,28 +40,23 @@ if CLIENT then
 		end)
 
 		local updateRate = GetConVar("tasutils_usage_updaterate")
-		local tickAmount = 0
+		local interval = 0
 		hook.Add("Think", "TASUtils.ServerMonitor", function()
+			-- Basically polls until there's been n amount of ticks specified by the console variable
+			interval = (interval + 1) % updateRate:GetInt()
+			if interval ~= 0 then return end
+
 			if not updateRate then
-				-- Attempt to fetch our console variable first
 				updateRate = GetConVar("tasutils_usage_updaterate")
-				return
 			end
 
-			-- Wait until enough ticks have passed to update
-			if tickAmount >= updateRate:GetInt() then
-				-- Our panel is invisible, the JavaScript queue will not function properly, so we run the
-				-- JS code manually
-				html:RunJavascript(
-					string.format("setServerCPU(%.7f);setServerRAM(%.7f);", TASUtils.GetUsage()) ..
-					string.format("setE2CPU(%.7f);setE2RAM(%.7f);", TASUtils.GetE2Usage()) ..
-					string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f);", TASUtils.GetStarfallUsage())
-				)
-
-				tickAmount = 0
-			else
-				tickAmount = tickAmount + 1
-			end
+			-- Our panel is invisible, the JavaScript queue will not function properly, so we run the
+			-- JS code manually
+			html:RunJavascript(
+				string.format("setServerCPU(%.7f);setServerRAM(%.7f);", TASUtils.GetUsage()) ..
+				string.format("setE2CPU(%.7f);setE2RAM(%.7f);", TASUtils.GetE2Usage()) ..
+				string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f);", TASUtils.GetStarfallUsage())
+			)
 		end)
 	end)
 
