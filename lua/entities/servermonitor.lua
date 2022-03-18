@@ -42,19 +42,21 @@ if CLIENT then
 		local updateRate = GetConVar("tasutils_usage_updaterate")
 		local interval = 0
 		hook.Add("Think", "TASUtils.ServerMonitor", function()
+			-- Basically polls until there's been n amount of ticks specified by the console variable
+			interval = (interval + 1) % updateRate:GetInt()
 			if interval ~= 0 then return end
 
-			html:QueueJavascript(
+			if not updateRate then
+				updateRate = GetConVar("tasutils_usage_updaterate")
+			end
+
+			-- Our panel is invisible, the JavaScript queue will not function properly, so we run the
+			-- JS code manually
+			html:RunJavascript(
 				string.format("setServerCPU(%.7f);setServerRAM(%.7f);", TASUtils.GetUsage()) ..
 				string.format("setE2CPU(%.7f);setE2RAM(%.7f);", TASUtils.GetE2Usage()) ..
 				string.format("setStarfallCPU(%.7f);setStarfallRAM(%.7f);", TASUtils.GetStarfallUsage())
 			)
-
-			if not updateRate then
-				updateRate = GetConVar("tasutils_usage_updaterate")
-			else
-				interval = (interval + 1) % updateRate:GetInt()
-			end
 		end)
 	end)
 
@@ -66,7 +68,7 @@ if CLIENT then
 end
 
 function ENT:SpawnFunction(plr, tr, ClassName)
-	if !tr.Hit then return end
+	if not tr.Hit then return end
 
 	local ent = ents.Create(ClassName)
 	ent:SetPos(tr.HitPos + tr.HitNormal * 20)
