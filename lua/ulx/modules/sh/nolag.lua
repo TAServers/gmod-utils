@@ -11,7 +11,7 @@ local function nolag(caller, targets)
     for _, prop in pairs(NADMOD.Props) do
         if prop.Owner ~= game.GetWorld() and (not targets or targetLut[prop.Owner]) and IsValid(prop.Ent) then
             local phys = prop.Ent:GetPhysicsObject()
-            if IsValid(phys) then
+            if IsValid(phys) and phys:IsMotionEnabled() then
                 phys:EnableMotion(false)
                 count = count + 1
             end
