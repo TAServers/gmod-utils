@@ -130,6 +130,7 @@ if SERVER then
 		self:SetArmor(0)
 		self:SetWalkSpeed(200)
 		self:SetRunSpeed(400)
+		self:ExitVehicle()
 
 		local spawnpoint = hook.Call("PlayerSelectSpawn", gm, self, false)
 		if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
