@@ -2,7 +2,6 @@ local DoubleJumpEnabled = CreateConVar("doublejump_enabled", 1, FCVAR_ARCHIVE, "
 
 -- options menu drawing
 local function OptionsMenu(optionsPanel)
-
     dj_checkbox = vgui.Create("DCheckBoxLabel")
     dj_checkbox:SetText("Toggle Double Jump")
     dj_checkbox:SetTextColor(Color(0, 0, 0))
