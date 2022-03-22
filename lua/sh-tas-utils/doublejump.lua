@@ -7,8 +7,8 @@ local POWER_INCREASE = 2
 AddCSLuaFile("effects/doublejump.lua")
 
 if SERVER then
-	util.AddNetworkString("TASUtils.DoubleJump")
-	net.Receive("TASUtils.DoubleJump", function(len, plr)
+	util.AddNetworkString( "TASUtils.DoubleJump" )
+	net.Receive( "TASUtils.DoubleJump", function(len, plr)
 		plr.DoubleJumpEnabled = net.ReadBool()
 	end)
 end
@@ -38,7 +38,6 @@ hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 			recipients = RecipientFilter()
 			recipients:AddAllPlayers()
 			recipients:RemovePlayer(ply) -- Remove ourselves since we do it on the client
-
 		end
 		
 		util.Effect("doublejump", fxData, true, recipients)
