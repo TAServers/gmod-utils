@@ -6,11 +6,18 @@ local POWER_INCREASE = 2
 -- Make sure clients also get our effect
 AddCSLuaFile("effects/doublejump.lua")
 
+if SERVER then
+	util.AddNetworkString("TASUtils.DoubleJump")
+	net.Receive("TASUtils.DoubleJump", function(len, plr)
+		plr.DoubleJumpEnabled = net.ReadBool()
+	end)
+end
+
 hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 	-- Check if the move has a jump command, and check if its a double jump
-	if move:KeyPressed(IN_JUMP) and not ply:OnGround() and not ply.doubleJumped then
+	if move:KeyPressed(IN_JUMP) and not ply:OnGround() and not ply.doubleJumped and ply.DoubleJumpEnabled then
 		-- A double jump has been initiated
-		ply.doubleJumped = true 
+		ply.doubleJumped = true
 		-- This sends the player primarily flying upwards, but also adds some forward velocity
 		local doubleJumpPower = ply:GetJumpPower() * POWER_INCREASE
 		local forwardVector = ply:GetAimVector() * FORWARD_INFLUENCE
@@ -31,6 +38,7 @@ hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 			recipients = RecipientFilter()
 			recipients:AddAllPlayers()
 			recipients:RemovePlayer(ply) -- Remove ourselves since we do it on the client
+
 		end
 		
 		util.Effect("doublejump", fxData, true, recipients)
