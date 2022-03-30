@@ -10,7 +10,7 @@ hook.Add("PlayerDisconnected", "TAS.Restart", function()
 		timer.Create("TAS.Restart", restartTime:GetInt(), 1, function()
 			DiscordRelay.CachePost({type = "custom", body = "Resetting the server..."})
 			RunConsoleCommand("relay_stop")
-			RunConsoleCommand("changelevel", game.GetMap())
+			RunConsoleCommand("changelevel", "gm_construct")
 		end)
 	end
 end)
