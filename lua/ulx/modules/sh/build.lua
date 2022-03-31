@@ -131,11 +131,13 @@ if SERVER then
 		self:SetWalkSpeed(200)
 		self:SetRunSpeed(400)
 		self:ExitVehicle()
-
-		local spawnpoint = hook.Call("PlayerSelectSpawn", gm, self, false)
-		if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
-			self:SetPos(spawnpoint:GetPos())
-			self:SetEyeAngles(spawnpoint:GetAngles())
+		
+		if not self:IsFrozen() then -- prevent frozen players from abusing build and pvp mode to move themselves
+			local spawnpoint = hook.Call("PlayerSelectSpawn", gm, self, false)
+			if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
+				self:SetPos(spawnpoint:GetPos())
+				self:SetEyeAngles(spawnpoint:GetAngles())
+			end
 		end
 
 		buildModePlayers[self] = nil
