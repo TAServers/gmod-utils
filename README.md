@@ -1,3 +1,5 @@
+[![Linter Badge](https://github.com/TAServers/gmod-utils/workflows/Linter/badge.svg)](https://github.com/TAServers/gmod-utils/actions)
+
 # TAServers GMod Utils
 
 Initialisation scripts and other utilities for the TAServers GMod server.  
