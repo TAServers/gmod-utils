@@ -14,7 +14,7 @@ local cleanupCmd = ulx.command(TASUtils.Category, "ulx cleanup", cleanupLogic, "
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help("Cleans up props owned by target(s)")
 cleanupCmd:addParam({
-	type = ULib.cmds.PlayersArg,
-	default = "^",
-	ULib.cmds.optional
+    type = ULib.cmds.PlayersArg,
+    default = "^",
+    ULib.cmds.optional
 })

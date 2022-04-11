@@ -30,7 +30,7 @@ hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 		local fxData = EffectData()
 		fxData:SetOrigin(ply:GetPos())
 		fxData:SetEntity(ply)
-		local recipients = nil 
+		local recipients = nil
 
 		-- Without this here - the client would play an effect, and the server would too - this
 		-- prevents double effects
@@ -39,7 +39,7 @@ hook.Add("Move", "TASUtils.DoubleJump", function(ply, move)
 			recipients:AddAllPlayers()
 			recipients:RemovePlayer(ply) -- Remove ourselves since we do it on the client
 		end
-		
+
 		util.Effect("doublejump", fxData, true, recipients)
 	end
 end)

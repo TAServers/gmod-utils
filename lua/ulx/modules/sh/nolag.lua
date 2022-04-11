@@ -26,7 +26,7 @@ local cmd = ulx.command(TASUtils.Category, "ulx nolag", nolag, "!nolag")
 cmd:defaultAccess(ULib.ACCESS_ADMIN)
 cmd:help("Freezes entities owned by players")
 cmd:addParam({
-	type = ULib.cmds.PlayersArg,
-	default = "*",
-	ULib.cmds.optional
+    type = ULib.cmds.PlayersArg,
+    default = "*",
+    ULib.cmds.optional
 })
