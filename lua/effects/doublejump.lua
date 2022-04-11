@@ -3,10 +3,10 @@ function EFFECT:Init(data)
 	self.particles = 24
 	self.endTime = CurTime() + 1
 	self.ent = data:GetEntity()
-	
+
 	-- Verified to be in HL2, not sure if that means everyone will have it but.. whatever
 	self.mat = "particle/particle_noisesphere"
-	
+
 	local emitter = ParticleEmitter(self.position, false)
 	for i = 1, self.particles do
 		local particle = emitter:Add(self.mat, self.position)
@@ -29,7 +29,7 @@ function EFFECT:Think()
 	local light = DynamicLight(self.ent:EntIndex())
 	light.pos = self.position
 	light.Size = 100
-	light.brightness = 2 
+	light.brightness = 2
 	light.r = 190
 	light.g = 190
 	light.b = 255

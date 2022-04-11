@@ -16,7 +16,7 @@ if CLIENT then
 	-- Setup DHTML monitor
 	local url = "https://www.taservers.com/gmod/utils/servermonitor.html"
 	local rt = GetRenderTarget("TASUtils.ServerMonitor", 1024, 1024)
-	
+
 	local html = vgui.Create("DHTML")
 	html:SetSize(1024, 512)
 	html:SetAlpha(0)
@@ -27,10 +27,10 @@ if CLIENT then
 		hook.Add("PreRender", "TASUtils.ServerMonitor", function()
 			html:UpdateHTMLTexture()
 			local htmlMat = html:GetHTMLMaterial()
-			
+
 			if not htmlMat then return end
-			
-			render.PushRenderTarget(rt)	
+
+			render.PushRenderTarget(rt)
 				cam.Start2D()
 					surface.SetMaterial(htmlMat)
 					surface.SetDrawColor(255, 255, 255)
@@ -85,11 +85,11 @@ if CLIENT then
 		if self.Screen then
 			render.SuppressEngineLighting(true)
 			render.SetMaterial(TASUtils.Materials.ServerMonitor)
-			
+
 			cam.PushModelMatrix(self:GetWorldTransformMatrix())
 			self.Screen:Draw()
 			cam.PopModelMatrix()
-			
+
 			render.SuppressEngineLighting(false)
 		end
 	end
@@ -98,12 +98,12 @@ end
 function ENT:Initialize()
 	if CLIENT then
 		self.Screen = Mesh()
-		
+
 		-- Calculate corners and scale
-		local bottomLeft = self:OBBMins()-- - self:OBBCenter()
-		local topRight = self:OBBMaxs()-- - self:OBBCenter()
+		local bottomLeft = self:OBBMins() -- - self:OBBCenter()
+		local topRight = self:OBBMaxs() -- - self:OBBCenter()
 		local scale = topRight - bottomLeft
-		
+
 		-- Calculate minor axis and adjust to plane
 		local minor = math.min(scale.x, scale.y, scale.z)
 		local v0, v1, v2, v3 = topRight
@@ -120,7 +120,7 @@ function ENT:Initialize()
 			v2 = Vector(bottomLeft.x, bottomLeft.y, topRight.z)
 			v3 = Vector(bottomLeft.x, topRight.y, topRight.z)
 		end
-		
+
 		mesh.Begin(self.Screen, MATERIAL_QUADS, 1)
 		mesh.Quad(v0, v1, v2, v3)
 		mesh.End()

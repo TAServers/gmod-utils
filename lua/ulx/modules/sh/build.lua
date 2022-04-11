@@ -131,7 +131,7 @@ if SERVER then
 		self:SetWalkSpeed(200)
 		self:SetRunSpeed(400)
 		self:ExitVehicle()
-		
+
 		if not self:IsFrozen() then -- prevent frozen players from abusing build and pvp mode to move themselves
 			local spawnpoint = hook.Call("PlayerSelectSpawn", gm, self, false)
 			if spawnpoint and IsEntity(spawnpoint) and spawnpoint:IsValid() then
@@ -174,7 +174,7 @@ else -- CLIENT
 	--[[
 		Tooltip Code
 	]]
-	
+
 	surface.CreateFont("TASUtils.BuildModeTooltip", {
 		font = "Roboto",
 		size = 24

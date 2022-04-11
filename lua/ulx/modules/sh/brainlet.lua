@@ -17,7 +17,7 @@ if SERVER then
 		Streak tracking
 	]]
 	local DB_NAME = "tasutils_brainlet_streaks"
-	sql.Query("CREATE TABLE IF NOT EXISTS ".. DB_NAME .."(id INTEGER, streak INTEGER);")
+	sql.Query("CREATE TABLE IF NOT EXISTS " .. DB_NAME .. "(id INTEGER, streak INTEGER);")
 
 	local function streakExists(plr)
 		local r = sql.Query(string.format("SELECT 1 FROM %s WHERE id = %u;", DB_NAME, plr:SteamID64()))
@@ -226,7 +226,7 @@ else
 
 		html:AddFunction("brainlet", "loaded", function()
 			html:Call(string.format(
-				'init("%s", "%s", "%s", %d);',
+				[[init("%s", "%s", "%s", %d);]],
 				category,
 				difficulty,
 				question,
@@ -235,7 +235,7 @@ else
 
 			for _, answer in ipairs(answers) do
 				html:Call(string.format(
-					'addButton("%s")',
+					[[addButton("%s")]],
 					answer
 				))
 			end
@@ -263,7 +263,7 @@ cmd:addParam({
 	hint = "Question difficulty (defaults to Easy)",
 	error = "Invalid difficulty \"%s\"",
 	completes = table.GetKeys(opentdb.Difficulty),
-	
+
 	-- Flags
 	ULib.cmds.optional, ULib.cmds.restrictToCompletes
 })
