@@ -80,13 +80,11 @@ if SERVER then
 						vMax2 = vMax2 * vMax2
 
 						if buildModePlayers[prop.Owner] and ent:GetVelocity():LengthSqr() > vMax2 then
-							ent:SetColor(Color(255, 0, 0))
 							if not ent.TASOldColGroup then
 								ent.TASOldColGroup = ent:GetCollisionGroup()
 								ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
 							end
 						elseif ent.TASOldColGroup then
-							ent:SetColor(Color(0, 255, 0))
 							ent:SetCollisionGroup(ent.TASOldColGroup)
 							ent.TASOldColGroup = nil
 						end
