@@ -62,7 +62,7 @@ if SERVER then
 					ColourScheme.Default, " failed to answer the brainlet in time, their streak was ",
 					ColourScheme.Parameter, streakGet(plr)
 				)
-				DiscordRelay.CachePost({
+				Relay.CachePost({
 					type = "custom",
 					body = plr:Nick() .. " failed to answer the brainlet in time, their streak was " .. tostring(streakGet(plr))
 				})
@@ -83,7 +83,7 @@ if SERVER then
 				ColourScheme.Parameter, TASUtils.URLDecode(outstandingBrainlets[plr].question),
 				ColourScheme.Default, "\""
 			)
-			DiscordRelay.CachePost({
+			Relay.CachePost({
 				type = "custom",
 				body = plr:Nick() .. " correctly answered the brainlet `" .. TASUtils.URLDecode(outstandingBrainlets[plr].question) .. "`"
 			})
@@ -100,7 +100,7 @@ if SERVER then
 				ColourScheme.Default, "\", their streak was ",
 				ColourScheme.Parameter, streakGet(plr)
 			)
-			DiscordRelay.CachePost({
+			Relay.CachePost({
 				type = "custom",
 				body = string.format(
 					"%s incorrectly answered the brainlet `%s`, the right answer was `%s`, but they answered `%s`, their streak was %u",

@@ -11,7 +11,7 @@ local curtimeRestartMap = CreateConVar(
 
 hook.Add("Think", "TAS.CurTimeRestart", function()
 	if CurTime() > curtimeRestartThresh:GetInt() and player.GetCount() == 0 then
-		DiscordRelay.CachePost({type = "custom", body = "Restarting to reduce CurTime..."})
+		Relay.CachePost({type = "custom", body = "Restarting to reduce CurTime..."})
 		RunConsoleCommand("relay_stop")
 		RunConsoleCommand("changelevel", curtimeRestartMap:GetString())
 	end
