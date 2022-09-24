@@ -209,7 +209,7 @@ else
 		frame:SetTitle("")
 		frame:SetVisible(true)
 		frame:SetDraggable(false)
-		frame:ShowCloseButton(true)
+		frame:ShowCloseButton(false)
 
 		function frame:Paint(w, h)
 			draw.RoundedBox(borderRadius, 0, 0, w, h, background)
