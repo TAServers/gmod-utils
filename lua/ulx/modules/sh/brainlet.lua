@@ -160,10 +160,12 @@ if SERVER then
 				if question.type == "multiple" then
 					net.WriteBool(true)
 
-					local numIncorrectAnswers = #question.incorrect_answers
-					net.WriteUInt(numIncorrectAnswers + 1, 8)
-					net.WriteString(question.correct_answer)
-					for i = 1, numIncorrectAnswers do
+					local numAnswers = #question.incorrect_answers + 1
+					question.incorrect_answers[numAnswers] = question.correct_answer
+					TASUtils.ShuffleTable(question.incorrect_answers) -- Shuffle the table so the correct answer is always in a random position
+
+					net.WriteUInt(numAnswers, 8)
+					for i = 1, numAnswers do
 						net.WriteString(question.incorrect_answers[i])
 					end
 				else
@@ -181,6 +183,152 @@ else
 	local windowWidth = CreateConVar("brainlet_window_w", 0.6, FCVAR_ARCHIVE, "Width of the brainlet window (as a percentage of your screen res)", 0.1, 0.9)
 	local windowHeight = CreateConVar("brainlet_window_h", 0.6, FCVAR_ARCHIVE, "Height of the brainlet window (as a percentage of your screen res)", 0.1, 0.9)
 
+	local function CreateBrainletPopup(category, difficulty, question, answers, deadline)
+		local startTime = CurTime()
+		local frame = vgui.Create("DFrame")
+
+		local scrw, scrh = ScrW(), ScrH()
+		local width, height = windowWidth:GetFloat(), windowHeight:GetFloat()
+		frame:SetPos((0.5 - width / 2) * scrw, (0.5 - height / 2) * scrh)
+
+		width, height = width * scrw, height * scrh
+		local margin = 10
+		local buttonMinSize = 0.15 * height
+		local buttonXPad = 10
+		local borderRadius = 16
+
+		local background = Color(34, 38, 41)
+		local timerBackground = Color(71, 75, 79)
+		local accent = Color(247, 125, 26)
+		local accentText = Color(224, 240, 243)
+
+		local buttonHover = Color(248, 144, 58)
+		local buttonPressed = Color(238, 122, 26)
+
+		frame:SetSize(width, height)
+		frame:SetTitle("")
+		frame:SetVisible(true)
+		frame:SetDraggable(false)
+		frame:ShowCloseButton(true)
+
+		function frame:Paint(w, h)
+			draw.RoundedBox(borderRadius, 0, 0, w, h, background)
+		end
+
+		local title = vgui.Create("DLabel", frame)
+		title:SetText(("%s: %s"):format(TASUtils.URLDecode(category), TASUtils.URLDecode(difficulty)))
+		title:SetFont("DermaLarge")
+		title:SetTextColor(Color(240, 123, 22))
+		title:SizeToContents()
+		title:SetPos(0, margin)
+		title:CenterHorizontal()
+
+		local timer = vgui.Create("DPanel", frame)
+		timer:SetSize(width - 0.1 * width, 0.2 * height)
+		timer:SetPos(0, 2 * margin + title:GetTall())
+		timer:CenterHorizontal()
+
+		function timer:Paint(w, h)
+			draw.RoundedBox(borderRadius, 0, 0, w, h, timerBackground)
+			draw.RoundedBox(borderRadius, 0, 0, w * (deadline - CurTime()) / (deadline - startTime), h, accent)
+			draw.Text({
+				text = TASUtils.URLDecode(question),
+				font = "DermaLarge",
+				pos = { w / 2, h / 2 },
+				xalign = TEXT_ALIGN_CENTER,
+				yalign = TEXT_ALIGN_CENTER,
+				color = accentText
+			})
+		end
+
+		local answerButtons = vgui.Create("DPanel", frame)
+		answerButtons:SetSize(width, height - 3 * margin - title:GetTall() - timer:GetTall())
+		answerButtons.buttons = {}
+		function answerButtons:Paint() end
+
+		local function ButtonPaint(self, w, h)
+			local colour = accent
+			if self:IsDown() then
+				colour = buttonPressed
+			elseif self:IsHovered() then
+				colour = buttonHover
+			end
+
+			draw.RoundedBox(borderRadius, 0, 0, w, h, colour)
+		end
+
+		for i, answer in ipairs(answers) do
+			local button = vgui.Create("DButton", answerButtons)
+			button:SetText(TASUtils.URLDecode(answer))
+			button:SetFont("DermaLarge")
+			button:SetTextColor(accentText)
+
+			button:SizeToContents()
+			button:SetSize(
+				button:GetWide() + buttonXPad < buttonMinSize and buttonMinSize or button:GetWide() + buttonXPad,
+				buttonMinSize
+			)
+
+			button.Paint = ButtonPaint
+			function button:DoClick()
+				net.Start("TASUtils.Brainlet")
+				net.WriteString(answer)
+				net.SendToServer()
+				frame:Remove()
+			end
+
+			answerButtons.buttons[i] = button
+		end
+
+		function answerButtons:PerformLayout(w, h)
+			local row = {}
+			local rowSize = 0
+			local rowWidth = 0
+
+			local offsetY = 0
+
+			local function drawRow()
+				if rowSize == 0 then return end
+
+				local offsetX = (w - rowWidth) / 2
+
+				for i = 1, rowSize do
+					row[i]:SetPos(offsetX, offsetY)
+					offsetX = offsetX + margin + row[i]:GetWide()
+				end
+
+				row = {}
+				rowSize = 0
+				rowWidth = 0
+
+				offsetY = offsetY + margin + buttonMinSize
+			end
+
+			for _, button in ipairs(self.buttons) do
+				local buttonWidth = button:GetWide()
+
+				if buttonWidth > w - (2 + rowSize) * margin then
+					button:SetWidth(w - 2 * margin)
+				end
+
+				if rowWidth + buttonWidth > w - (2 + rowSize) * margin then
+					drawRow()
+				end
+
+				rowSize = rowSize + 1
+				row[rowSize] = button
+				rowWidth = rowWidth + buttonWidth
+			end
+
+			drawRow()
+
+			local usedHeight = offsetY - margin
+			answerButtons:SetPos(0, (h - usedHeight) / 2 + 2 * margin + title:GetTall() + timer:GetTall())
+		end
+
+		frame:MakePopup()
+	end
+
 	-- Even if someone goes in and removes the netmsg receiver clientside, they'll still get timed out by the server
 	net.Receive("TASUtils.Brainlet", function()
 		-- Read packet
@@ -193,55 +341,12 @@ else
 			for i = 1, net.ReadUInt(8) do
 				answers[i] = net.ReadString()
 			end
-			TASUtils.ShuffleTable(answers) -- Shuffle the table so the correct answer is always in a random position
 		else -- True/False
 			answers = {"True", "False"}
 		end
 
 		local deadline = net.ReadFloat()
-
-		-- Create the GUI window for brainlet
-		local frame = vgui.Create("DFrame")
-		local scrw, scrh = ScrW(), ScrH() -- Cache screen dimensions
-		local width, height = windowWidth:GetFloat(), windowHeight:GetFloat()
-
-		frame:SetPos((0.5 - width / 2) * scrw, (0.5 - height / 2) * scrh)
-		frame:SetSize(width * scrw, height * scrh)
-		frame:SetTitle("")
-		frame:SetVisible(true)
-		frame:SetDraggable(false)
-		frame:ShowCloseButton(false)
-		function frame:Paint() end
-
-		local html = vgui.Create("DHTML", frame)
-		html:Dock(FILL)
-		html:OpenURL(TASUtils.Chromium and "https://www.taservers.com/gmod/utils/brainlet.html" or "https://www.taservers.com/gmod/utils/brainlet_nochromium.html")
-
-		html:AddFunction("brainlet", "onClick", function(answer)
-			net.Start("TASUtils.Brainlet")
-			net.WriteString(answer)
-			net.SendToServer()
-			frame:Remove()
-		end)
-
-		html:AddFunction("brainlet", "loaded", function()
-			html:Call(string.format(
-				[[init("%s", "%s", "%s", %d);]],
-				category,
-				difficulty,
-				question,
-				deadline - CurTime()
-			))
-
-			for _, answer in ipairs(answers) do
-				html:Call(string.format(
-					[[addButton("%s")]],
-					answer
-				))
-			end
-		end)
-
-		frame:MakePopup()
+		CreateBrainletPopup(category, difficulty, question, answers, deadline)
 	end)
 end
 
