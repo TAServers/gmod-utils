@@ -54,56 +54,63 @@ if SERVER then
 		0.01
 	)
 
-	local e2RamMax
+	local function calcUsageSF(frameTime)
+		if SF.playerInstances then
+			local total = 0
+			for _, instances in pairs(SF.playerInstances) do
+				for instance, _ in pairs(instances) do
+					total = total + instance:movingCPUAverage()
+				end
+			end
 
-	local ticksSinceUpdate = updateRate:GetInt()
-	hook.Add("Think", "TASUtils.GetUsage", function()
-		local frameTime = FrameTime()
-		local ramUsage = collectgarbage("count")
-
-		-- Update server usage
-		do
-			local min, max = svTpsMin:GetFloat(), svTpsMax:GetFloat()
-			data.sv.cpu = 1 - (1 / frameTime - min) / (max - min)
+			data.sv.sf.cpu = total / frameTime -- Starfall CPU usage measured as a percentage of the frame
 		end
-		data.sv.ram = ramUsage / (svRamMax:GetFloat() * 1024 * 1024)
 
-		-- Update E2 usage
+		if SF.Instance and SF.Instance.RamAvg then
+			data.sv.sf.ram = SF.Instance.RamAvg / SF.RamCap:GetInt()
+		end
+	end
+
+	local e2RamMax
+	local function calcUsageE2(frameTime, ramUsage)
 		if not e2RamMax then -- Wait for convar to exist
 			e2RamMax =
 				GetConVar("wire_expression2_ram_emergency_shutdown_total")
 		else
-			do
-				local total = 0
-				for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-					if e2.context and e2.context.timebench then
-						total = total + e2.context.timebench
-					end
+			local total = 0
+			for _, e2 in ipairs(ents.FindByClass("gmod_wire_expression2")) do
+				if e2.context and e2.context.timebench then
+					total = total + e2.context.timebench
 				end
-				data.sv.e2.cpu = total / frameTime
 			end
+			data.sv.e2.cpu = total / frameTime
+
 			data.sv.e2.ram = ramUsage / (e2RamMax:GetInt() * 1000) -- Yes this is the incorrect comparison, but it's what wire will terminate by so don't fix it until they do
 		end
+	end
 
-		-- Update SF usage
-		if SF then
-			if SF.playerInstances then
-				local total = 0
-				for _, instances in pairs(SF.playerInstances) do
-					for instance, _ in pairs(instances) do
-						total = total + instance:movingCPUAverage()
-					end
-				end
-
-				data.sv.sf.cpu = total / frameTime -- Starfall CPU usage measured as a percentage of the frame
-			end
-
-			if SF.Instance and SF.Instance.RamAvg then
-				data.sv.sf.ram = SF.Instance.RamAvg / SF.RamCap:GetInt()
-			end
-		end
-
+	local ticksSinceUpdate = updateRate:GetInt()
+	hook.Add("Think", "TASUtils.GetUsage", function()
 		if ticksSinceUpdate >= updateRate:GetInt() then
+			local frameTime = FrameTime()
+			local ramUsage = collectgarbage("count")
+
+			-- Update server usage
+			do
+				local min, max = svTpsMin:GetFloat(), svTpsMax:GetFloat()
+				data.sv.cpu =
+					math.max(1 - (1 / frameTime - min) / (max - min), 0)
+			end
+			data.sv.ram = ramUsage / (svRamMax:GetFloat() * 1024 * 1024)
+
+			if E2Lib then
+				calcUsageE2(ramUsage)
+			end
+
+			if SF then
+				calcUsageSF(frameTime)
+			end
+
 			net.Start("TASUtils.GetUsage")
 			net.WriteFloat(data.sv.cpu)
 			net.WriteFloat(data.sv.ram)
