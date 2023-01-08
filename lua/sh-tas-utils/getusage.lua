@@ -104,7 +104,7 @@ if SERVER then
 			data.sv.ram = ramUsage / (svRamMax:GetFloat() * 1024 * 1024)
 
 			if E2Lib then
-				calcUsageE2(ramUsage)
+				calcUsageE2(frameTime, ramUsage)
 			end
 
 			if SF then
