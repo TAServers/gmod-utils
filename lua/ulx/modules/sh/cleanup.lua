@@ -10,11 +10,12 @@ local function cleanupLogic(calling_ply, targets)
 	ulx.fancyLogAdmin(calling_ply, "#A cleaned up #T's props", targets)
 end
 
-local cleanupCmd = ulx.command(TASUtils.Category, "ulx cleanup", cleanupLogic, "!cleanup")
+local cleanupCmd =
+	ulx.command(TASUtils.Category, "ulx cleanup", cleanupLogic, "!cleanup")
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help("Cleans up props owned by target(s)")
 cleanupCmd:addParam({
 	type = ULib.cmds.PlayersArg,
 	default = "^",
-	ULib.cmds.optional
+	ULib.cmds.optional,
 })
