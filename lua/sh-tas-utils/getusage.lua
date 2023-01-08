@@ -4,31 +4,55 @@ local data = {
 		ram = 0,
 		e2 = {
 			cpu = 0,
-			ram = 0
+			ram = 0,
 		},
 		sf = {
 			cpu = 0,
-			ram = 0
-		}
+			ram = 0,
+		},
 	},
 	cl = {
 		cpu = 0,
 		ram = 0,
 		sf = {
 			cpu = 0,
-			ram = 0
-		}
-	}
+			ram = 0,
+		},
+	},
 }
 
-local updateRate = CreateConVar("tasutils_usage_updaterate", 8, {FCVAR_ARCHIVE, FCVAR_REPLICATED}, "How often to network usage data between realms (in ticks)", 1)
+local updateRate = CreateConVar(
+	"tasutils_usage_updaterate",
+	8,
+	{ FCVAR_ARCHIVE, FCVAR_REPLICATED },
+	"How often to network usage data between realms (in ticks)",
+	1
+)
 
 if SERVER then
 	util.AddNetworkString("TASUtils.GetUsage")
 
-	local svTpsMax = CreateConVar("tasutils_tickrate", 66, FCVAR_ARCHIVE, "Server desired tickrate used by TASUtils.GetUsage", 0)
-	local svTpsMin = CreateConVar("tasutils_tickrate_min", 33, FCVAR_ARCHIVE, "Min point for server tickrate used by TASUtils.GetUsage", 0)
-	local svRamMax = CreateConVar("tasutils_ram_max", 2, FCVAR_ARCHIVE, "Max point for server RAM usage returned by TASUtils.GetUsage (in gigabytes)", 0.01)
+	local svTpsMax = CreateConVar(
+		"tasutils_tickrate",
+		66,
+		FCVAR_ARCHIVE,
+		"Server desired tickrate used by TASUtils.GetUsage",
+		0
+	)
+	local svTpsMin = CreateConVar(
+		"tasutils_tickrate_min",
+		33,
+		FCVAR_ARCHIVE,
+		"Min point for server tickrate used by TASUtils.GetUsage",
+		0
+	)
+	local svRamMax = CreateConVar(
+		"tasutils_ram_max",
+		2,
+		FCVAR_ARCHIVE,
+		"Max point for server RAM usage returned by TASUtils.GetUsage (in gigabytes)",
+		0.01
+	)
 
 	local e2RamMax
 
@@ -46,7 +70,8 @@ if SERVER then
 
 		-- Update E2 usage
 		if not e2RamMax then -- Wait for convar to exist
-			e2RamMax = GetConVar("wire_expression2_ram_emergency_shutdown_total")
+			e2RamMax =
+				GetConVar("wire_expression2_ram_emergency_shutdown_total")
 		else
 			do
 				local total = 0

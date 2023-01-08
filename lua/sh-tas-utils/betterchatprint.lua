@@ -7,12 +7,13 @@ if SERVER then
 	local _IsColor = IsColor
 	local util_Compress = util.Compress
 
-	local net_Start, net_WriteData, net_Send, net_Broadcast = net.Start, net.WriteData, net.Send, net.Broadcast
+	local net_Start, net_WriteData, net_Send, net_Broadcast =
+		net.Start, net.WriteData, net.Send, net.Broadcast
 
 	local function encodeMsgArgs(...)
 		local header = ""
 		local body = ""
-		for _, v in _ipairs({...}) do
+		for _, v in _ipairs({ ... }) do
 			if _IsColor(v) then
 				header = header .. "c"
 				body = body .. string_char(v:Unpack())
@@ -59,7 +60,9 @@ else
 		-- Parse header
 		local header, headerLen = "", 0
 		while true do
-			if data[dataPtr] == "\0" then break end
+			if data[dataPtr] == "\0" then
+				break
+			end
 
 			header = header .. data[dataPtr]
 			headerLen = headerLen + 1
@@ -72,7 +75,10 @@ else
 		local args = {}
 		for i = 1, headerLen do
 			if header[i] == "c" then -- Colours
-				table_insert(args, _Color(string_byte(data, dataPtr, dataPtr + 3)))
+				table_insert(
+					args,
+					_Color(string_byte(data, dataPtr, dataPtr + 3))
+				)
 				dataPtr = dataPtr + 4 -- Skip over the three colour values
 			elseif header[i] == "s" then -- Strings
 				local substring = ""
