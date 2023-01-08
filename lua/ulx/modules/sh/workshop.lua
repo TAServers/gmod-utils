@@ -5,6 +5,6 @@ local cmd = ulx.command(TASUtils.Category, "ulx workshop", function(plr)
 	plr:ChatPrint(
 		"https://steamcommunity.com/sharedfiles/filedetails/?id=2609504551"
 	)
-end, "!workshop")
+end, { "!workshop", "!addons" })
 cmd:defaultAccess(ULib.ACCESS_ALL)
 cmd:help("Prints the server's Workshop collection")
