@@ -26,6 +26,7 @@ local names = {
 	"StarfallEx > E2",
 	"We're popular now?",
 	"100% furry free",
+	"Bare metal hosting!",
 }
 
 -- Verify name lengths
