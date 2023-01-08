@@ -2,7 +2,7 @@ local opentdb = {
 	Difficulty = {
 		Easy = "easy",
 		Medium = "medium",
-		Hard = "hard"
+		Hard = "hard",
 	},
 	Category = {
 		GeneralKnowledge = 9,
@@ -28,8 +28,8 @@ local opentdb = {
 		Comics = 29,
 		Gadgets = 30,
 		AnimeAndManga = 31,
-		Animations = 32
-	}
+		Animations = 32,
+	},
 }
 
 -- Fetch questions from the api (callback should take success: bool, questions: table)
@@ -40,16 +40,27 @@ function opentdb.FetchQuestions(callback, amount, category, difficulty)
 
 	-- TODO: Implement a locally stored trivia dataset fallback
 	http.Fetch(
-		string.format("https://opentdb.com/api.php?amount=%i&category=%i&difficulty=%s", amount, category, difficulty),
-		function(body, size, headers, statusCode)
-			if statusCode ~= 200 then callback(false, {}) end
+		string.format(
+			"https://opentdb.com/api.php?amount=%i&category=%i&difficulty=%s",
+			amount,
+			category,
+			difficulty
+		),
+		function(body, _size, _headers, statusCode)
+			if statusCode ~= 200 then
+				callback(false, {})
+			end
 
 			body = util.JSONToTable(body)
-			if body.response_code ~= 0 then callback(false, {}) end
+			if body.response_code ~= 0 then
+				callback(false, {})
+			end
 
 			callback(true, body.results)
 		end,
-		function() callback(false, {}) end
+		function()
+			callback(false, {})
+		end
 	)
 end
 
