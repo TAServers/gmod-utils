@@ -51,4 +51,4 @@ jobs:
 
     steps:
       - name: Post to webhook
-        run: curl --fail -X POST ${{ secrets.DEPLOYER_WEBHOOK }}/${{ github.event.repository.name }}
+        run: curl --fail-with-body -X POST ${{ secrets.DEPLOYER_WEBHOOK }}/${{ github.event.repository.name }}
