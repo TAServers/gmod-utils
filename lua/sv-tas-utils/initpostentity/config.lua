@@ -1,7 +1,6 @@
 -- This should contain all the configs to be run after lua has finished initialising
 
 -- Enable relay
-RunConsoleCommand("relay_connection", "172.17.0.1:8080")
 RunConsoleCommand("relay_start")
 
 -- Wiremod
