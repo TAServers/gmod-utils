@@ -18,7 +18,7 @@ local names = {
 	"Better than s&box",
 	"Complaining about Lua",
 	"Surprise restarts",
-	"Powered by Docker!",
+	"Powered by Docker",
 	"Containerisation!",
 	"Overengineering addons",
 	"63charhostnamelimitwhy",
