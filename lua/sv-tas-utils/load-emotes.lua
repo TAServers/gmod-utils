@@ -1,5 +1,9 @@
 local function transformRelayEmoteToSChatEmoji(relayEmote)
-	return { relayEmote:GetName(), relayEmote:GetUrl() }
+	return {
+		id = relayEmote:GetName(),
+		uri = relayEmote:GetUrl(),
+		numericId = relayEmote:GetId(),
+	}
 end
 
 hook.Add("Relay.InfoPayloadUpdated", "LoadCustomEmotesIntoSChat", function()
