@@ -1,8 +1,11 @@
 local function transformRelayEmoteToSChatEmoji(relayEmote)
+	local uri = relayEmote:GetUrl()
+
 	return {
 		id = relayEmote:GetName(),
-		uri = relayEmote:GetUrl(),
+		uri = uri,
 		numericId = relayEmote:GetId(),
+		isAnimated = uri:sub(-4, -1) == ".gif",
 	}
 end
 
