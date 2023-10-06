@@ -1,20 +1,19 @@
-local function cleanupChips(calling_ply, targets)
-	for _, ply in pairs(targets) do
-		if IsValid(ply) then
-			for _, chip in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-				if chip:IsValid() and chip:CPPIGetOwner() == ply then
-					chip:Remove()
-				end
-			end
-			for _, chip in ipairs(ents.FindByClass("starfall_processor")) do
-				if chip:IsValid() and chip:CPPIGetOwner() == ply then
-					chip:Remove()
+local CHIP_CLASSES = { "gmod_wire_expression2", "starfall_processor" }
+
+local function cleanupChips(callingPlayer, targets)
+	for _, player in pairs(targets) do
+		if IsValid(player) then
+			for _, entityClass in ipairs(CHIP_CLASSES) do
+				for _, chip in ipairs(ents.FindByClass(entityClass)) do
+					if chip:IsValid() and chip:CPPIGetOwner() == player then
+						chip:Remove()
+					end
 				end
 			end
 		end
 	end
 
-	ulx.fancyLogAdmin(calling_ply, "#A cleaned up #T's chips", targets)
+	ulx.fancyLogAdmin(callingPlayer, "#A cleaned up #T's chips", targets)
 end
 
 local cleanupCmd = ulx.command(
@@ -25,7 +24,7 @@ local cleanupCmd = ulx.command(
 )
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help(
-	"Cleans up the Expression2 and StarfallEx chips owned by target(s)"
+	"Removes the Expression2 and StarfallEx chips owned by the target(s)"
 )
 cleanupCmd:addParam({
 	type = ULib.cmds.PlayersArg,
