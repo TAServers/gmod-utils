@@ -1,32 +1,38 @@
-local function stopChips(calling_ply, targets)
-	for _, ply in pairs(targets) do
+local CHIP_CLASS_STOP_FUNCTIONS = {
+	gmod_wire_expression2 = function(chip, callingPlayer)
+		if chip.error then
+			return
+		end
+
+		chip:Destruct()
+		chip:Error(
+			string.format(
+				"Execution halted (Triggered by: %s)",
+				callingPlayer:Nick()
+			),
+			"Execution halted"
+		)
+	end,
+	starfall_processor = function(chip)
+		chip:Error({ message = "Killed by admin", traceback = "" })
+		net.Start("starfall_processor_kill")
+		net.WriteEntity(chip)
+		net.Broadcast()
+	end,
+}
+
+local function stopChips(callingPlayer, targets)
+	for _, ply in ipairs(targets) do
 		if IsValid(ply) then
-			for _, chip in ipairs(ents.FindByClass("gmod_wire_expression2")) do
-				if chip:IsValid() and chip:CPPIGetOwner() == ply then
-					if chip.error then
-						return
-					end
-					chip:Destruct()
-					chip:Error(
-						"Execution halted (Triggered by: "
-							.. calling_ply:Nick()
-							.. ")",
-						"Execution halted"
-					)
-				end
-			end
-			for _, chip in ipairs(ents.FindByClass("starfall_processor")) do
-				if chip:IsValid() and chip:CPPIGetOwner() == ply then
-					chip:Error({ message = "Killed by admin", traceback = "" })
-					net.Start("starfall_processor_kill")
-					net.WriteEntity(chip)
-					net.Broadcast()
+			for entityClass, stopFunction in pairs(CHIP_CLASS_STOP_FUNCTIONS) do
+				for _, chip in ipairs(ents.FindByClass(entityClass)) do
+					stopFunction(chip, callingPlayer)
 				end
 			end
 		end
 	end
 
-	ulx.fancyLogAdmin(calling_ply, "#A stopped #T's chips", targets)
+	ulx.fancyLogAdmin(callingPlayer, "#A stopped #T's chips", targets)
 end
 
 local cleanupCmd =
