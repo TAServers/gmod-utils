@@ -13,7 +13,7 @@ local function cleanupChips(callingPlayer, targets)
 		end
 	end
 
-	ulx.fancyLogAdmin(callingPlayer, "#A cleaned up #T's chips", targets)
+	ulx.fancyLogAdmin(callingPlayer, "#A cleaned up chips owned by #T", targets)
 end
 
 local cleanupCmd = ulx.command(

@@ -32,7 +32,7 @@ local function stopChips(callingPlayer, targets)
 		end
 	end
 
-	ulx.fancyLogAdmin(callingPlayer, "#A stopped #T's chips", targets)
+	ulx.fancyLogAdmin(callingPlayer, "#A stopped chips owned by #T", targets)
 end
 
 local cleanupCmd = ulx.command(
