@@ -43,7 +43,7 @@ local cleanupCmd = ulx.command(
 )
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help(
-	"Stops/halts the Expression2 and StarfallEx chips owned by target(s)"
+	"Errors the Expression2 and StarfallEx chips owned by the target(s)"
 )
 cleanupCmd:addParam({
 	type = ULib.cmds.PlayersArg,
