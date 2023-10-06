@@ -1,7 +1,7 @@
 local CHIP_CLASSES = { "gmod_wire_expression2", "starfall_processor" }
 
 local function cleanupChips(callingPlayer, targets)
-	for _, player in pairs(targets) do
+	for _, player in ipairs(targets) do
 		if IsValid(player) then
 			for _, entityClass in ipairs(CHIP_CLASSES) do
 				for _, chip in ipairs(ents.FindByClass(entityClass)) do
