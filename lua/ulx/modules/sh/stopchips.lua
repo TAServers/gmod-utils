@@ -35,8 +35,12 @@ local function stopChips(callingPlayer, targets)
 	ulx.fancyLogAdmin(callingPlayer, "#A stopped #T's chips", targets)
 end
 
-local cleanupCmd =
-	ulx.command(TASUtils.Category, "ulx stopchips", stopChips, "!stopchips")
+local cleanupCmd = ulx.command(
+	TASUtils.Category,
+	"ulx stopchips",
+	stopChips,
+	{ "!stopchips", "!haltchips", "!killchips", "!terminatechips" }
+)
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help(
 	"Stops/halts the Expression2 and StarfallEx chips owned by target(s)"
