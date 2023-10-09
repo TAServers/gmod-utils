@@ -22,11 +22,13 @@ local CHIP_CLASS_STOP_FUNCTIONS = {
 }
 
 local function stopChips(callingPlayer, targets)
-	for _, ply in ipairs(targets) do
-		if IsValid(ply) then
+	for _, player in ipairs(targets) do
+		if IsValid(player) then
 			for entityClass, stopFunction in pairs(CHIP_CLASS_STOP_FUNCTIONS) do
 				for _, chip in ipairs(ents.FindByClass(entityClass)) do
-					stopFunction(chip, callingPlayer)
+					if chip:IsValid() and chip:CPPIGetOwner() == player then
+						stopFunction(chip, callingPlayer)
+					end
 				end
 			end
 		end
