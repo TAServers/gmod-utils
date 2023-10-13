@@ -1,10 +1,8 @@
-local defaultName = "Total Anarchy Server [Wire|SfEx|CSLua] - "
-local rootName = CreateConVar(
-	"root_hostname",
-	defaultName,
-	FCVAR_ARCHIVE,
-	"Server name to use before appending msg"
-)
+local NAME_FORMAT =
+	"[TAS] Total Anarchy Servers ${region} | E2,SF,ACF | ${message}"
+local MAX_HOSTNAME_LENGTH = 63
+local SV_LOCATION_CONVAR = GetConVar("sv_location")
+
 local delay = CreateConVar(
 	"hostname_change_delay",
 	300,
@@ -13,32 +11,41 @@ local delay = CreateConVar(
 	1
 )
 
---	"----------------------"  How long one of these entries can be assuming we're using the default name above
-local names = {
+local MESSAGES = {
+	------------------ How long one of these entries can be
 	"Better than s&box",
-	"Complaining about Lua",
 	"Surprise restarts",
 	"Powered by Docker",
-	"Containerisation!",
-	"Overengineering addons",
-	"63charhostnamelimitwhy",
-	"Under construction",
+	"Overengineering",
 	"Squashing bugs",
 	"StarfallEx > E2",
-	"We're popular now?",
 	"100% furry free",
-	"Bare metal hosting!",
+	"No admin bypass",
+	"Tracing rays",
+	"Spamming cubes",
 }
 
--- Verify name lengths
-for _, name in ipairs(names) do
-	local length = #rootName:GetString() + #name
-	if length > 63 then
+local function getFormattedHostname(message)
+	---@type string
+	local region = SV_LOCATION_CONVAR:GetString():upper()
+
+	-- Redundant local to avoid returning gsub count
+	local formatted = NAME_FORMAT:gsub("${region}", region)
+		:gsub("${message}", message)
+	return formatted
+end
+
+for _, message in ipairs(MESSAGES) do
+	local name = getFormattedHostname(message)
+	local length = #name
+
+	if length > MAX_HOSTNAME_LENGTH then
 		print(
 			string.format(
-				"WARNING | Name %s is %i longer than the maximum number of characters allowed",
+				"WARNING | Name '%s' is %i longer than the maximum number of characters allowed (%i)",
 				name,
-				length - 63
+				length - MAX_HOSTNAME_LENGTH,
+				MAX_HOSTNAME_LENGTH
 			)
 		)
 	end
@@ -48,8 +55,8 @@ local changeTime = CurTime()
 hook.Add("Think", "TAS.NameChanger", function()
 	local time = CurTime()
 	if time >= changeTime then
-		local choice = names[math.random(#names)]
-		RunConsoleCommand("hostname", rootName:GetString() .. choice)
+		local choice = MESSAGES[math.random(#MESSAGES)]
+		RunConsoleCommand("hostname", getFormattedHostname(choice))
 
 		changeTime = time + delay:GetFloat()
 	end
