@@ -12,20 +12,17 @@ local delay = CreateConVar(
 )
 
 local MESSAGES = {
-	---------------------- How long one of these entries can be
+	------------------ How long one of these entries can be
 	"Better than s&box",
-	"Complaining about Lua",
 	"Surprise restarts",
 	"Powered by Docker",
-	"Containerisation!",
-	"Overengineering addons",
-	"63charhostnamelimitwhy",
-	"Under construction",
+	"Overengineering",
 	"Squashing bugs",
 	"StarfallEx > E2",
-	"We're popular now?",
 	"100% furry free",
-	"Bare metal hosting!",
+	"No admin bypass",
+	"Tracing rays",
+	"Spamming cubes",
 }
 
 local function getFormattedHostname(message)
