@@ -29,7 +29,10 @@ local function getFormattedHostname(message)
 	---@type string
 	local region = SV_LOCATION_CONVAR:GetString():upper()
 
-	return NAME_FORMAT:gsub("${region}", region):gsub("${message}", message)
+	-- Redundant local to avoid returning gsub count
+	local formatted = NAME_FORMAT:gsub("${region}", region)
+		:gsub("${message}", message)
+	return formatted
 end
 
 for _, message in ipairs(MESSAGES) do
