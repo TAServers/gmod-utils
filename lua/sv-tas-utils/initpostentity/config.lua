@@ -1,8 +1,5 @@
 -- This should contain all the configs to be run after lua has finished initialising
 
--- Enable relay
-RunConsoleCommand("relay_start")
-
 -- Wiremod
 RunConsoleCommand("wire_expression2_quotasoft", 100000)
 RunConsoleCommand("wire_expression2_quotahard", 100000)
