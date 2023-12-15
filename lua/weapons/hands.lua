@@ -37,12 +37,8 @@ function SWEP:Reload() return false end
 function SWEP:Holster() return true  end
 function SWEP:ShouldDropOnDie() return false end
 
-local weaponSelectionColor = Color(255, 220, 0, 255)
-function SWEP:DrawWeaponSelection(x, y, w, t, a)
-	weaponSelectionColor.a = a
-	draw.SimpleText("C", "creditslogo", x + w / 2, y, weaponSelectionColor, TEXT_ALIGN_CENTER)
-	self:PrintWeaponInfo(x + w + 20, y + t * 0.95, alpha)
-end
+SWEP.WepSelectIcon = surface.GetTextureID("gui/faceposer_indicator")
+SWEP.BounceWeaponIcon = false
 
 function SWEP:Initialize()
 	if self.SetHoldType then
