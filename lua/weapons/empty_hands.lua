@@ -2,17 +2,18 @@ AddCSLuaFile()
 
 local SWEP = { Primary = {}, Secondary = {} }
 
-local baseClass = baseclass.Get( "weapon_base" )
+local baseClass = baseclass.Get("weapon_base")
 
-SWEP.Author     	= ""
-SWEP.Contact      	= ""
+SWEP.Author     	= "PAC3 Team & TAS Team"
+SWEP.Contact      	= "https://taservers.com/"
 SWEP.Purpose      	= ""
 SWEP.Instructions   = "Right-Click to toggle crosshair"
-SWEP.PrintName      = "Hands"
+SWEP.PrintName      = "Empty Hands"
+SWEP.IconOverride   = "entities/weapon_fists.png"
+
 SWEP.DrawAmmo       = false
 SWEP.DrawCrosshair	= true
 SWEP.DrawWeaponInfoBox = true
-
 SWEP.SlotPos      	= 1
 SWEP.Slot         	= 1
 
