@@ -42,8 +42,8 @@ function SWEP:PrimaryAttack() end
 function SWEP:SecondaryAttack()
 	if
 		not IsFirstTimePredicted()
-		or not self.Owner:IsWalking()
-		or not self.Owner:Crouching()
+		or not self:GetOwner():IsWalking()
+		or not self:GetOwner():Crouching()
 	then
 		return
 	end
