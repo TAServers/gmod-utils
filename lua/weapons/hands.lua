@@ -17,8 +17,6 @@ SWEP.Secondary.Ammo = "none"
 if CLIENT then
 	SWEP.DrawAmmo = false
 	SWEP.DrawCrosshair = true
-	SWEP.WepSelectIcon = surface.GetTextureID("gui/faceposer_indicator")
-	SWEP.BounceWeaponIcon = false
 
 	function SWEP:DrawWorldModel() end
 	function SWEP:DrawWorldModelTranslucent() end
