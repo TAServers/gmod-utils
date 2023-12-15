@@ -26,9 +26,7 @@ else
 	end
 
 	function SWEP:OnDrop()
-		if SERVER then
-			self:Remove()
-		end
+		self:Remove()
 	end
 end
 
