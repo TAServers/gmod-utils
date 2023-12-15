@@ -1,9 +1,3 @@
-
-AddCSLuaFile()
-
-local SWEP = { Primary = {}, Secondary = {} }
-local baseClass = baseclass.Get("weapon_base")
-
 SWEP.Author     	       = "PAC3 Team & TAS Team"
 SWEP.Contact      	       = "https://taservers.com/"
 SWEP.Purpose      	       = ""
@@ -47,7 +41,7 @@ local weaponSelectionColor = Color(255, 220, 0, 255)
 function SWEP:DrawWeaponSelection(x, y, w, t, a)
 	weaponSelectionColor.a = a
 	draw.SimpleText("C", "creditslogo", x + w / 2, y, weaponSelectionColor, TEXT_ALIGN_CENTER)
-	baseClass.PrintWeaponInfo(self, x + w + 20, y + t * 0.95, alpha)
+	self:PrintWeaponInfo(x + w + 20, y + t * 0.95, alpha)
 end
 
 function SWEP:Initialize()
