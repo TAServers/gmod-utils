@@ -1,31 +1,28 @@
+
 AddCSLuaFile()
 
 local SWEP = { Primary = {}, Secondary = {} }
-
 local baseClass = baseclass.Get("weapon_base")
 
-SWEP.Author     	= "PAC3 Team & TAS Team"
-SWEP.Contact      	= "https://taservers.com/"
-SWEP.Purpose      	= ""
-SWEP.Instructions   = "Right-Click to toggle crosshair"
-SWEP.PrintName      = "Empty Hands"
-SWEP.IconOverride   = "entities/weapon_fists.png"
+SWEP.Author     	       = "PAC3 Team & TAS Team"
+SWEP.Contact      	       = "https://taservers.com/"
+SWEP.Purpose      	       = ""
+SWEP.Instructions          = "Right-click while walking and crouching to toggle the crosshair"
+SWEP.PrintName             = "Hands"
+SWEP.IconOverride          = "entities/weapon_fists.png"
+SWEP.Spawnable    	       = true
+SWEP.AdminSpawnable	       = false
 
-SWEP.DrawAmmo       = false
-SWEP.DrawCrosshair	= true
-SWEP.DrawWeaponInfoBox = true
-SWEP.SlotPos      	= 1
-SWEP.Slot         	= 1
-
-SWEP.Spawnable    	= true
-SWEP.AdminSpawnable	= false
-
-SWEP.AutoSwitchTo	= true
-SWEP.AutoSwitchFrom	= true
-SWEP.Weight 		= 1
-
-SWEP.HoldType = "normal"
-SWEP.ViewModel = "models/weapons/c_arms.mdl"
+SWEP.AutoSwitchTo	       = true
+SWEP.AutoSwitchFrom	       = true
+SWEP.Weight 		       = 1
+SWEP.DrawAmmo              = false
+SWEP.DrawCrosshair	       = true
+SWEP.DrawWeaponInfoBox     = true
+SWEP.SlotPos      	       = 1
+SWEP.Slot         	       = 1
+SWEP.HoldType              = "normal"
+SWEP.ViewModel             = "models/weapons/c_arms.mdl"
 
 SWEP.Primary.ClipSize      = -1
 SWEP.Primary.DefaultClip   = -1
@@ -37,7 +34,6 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic   = false
 SWEP.Secondary.Ammo        = "none"
 
-
 function SWEP:DrawHUD() end
 function SWEP:DrawWorldModel() end
 function SWEP:DrawWorldModelTranslucent() end
@@ -47,23 +43,23 @@ function SWEP:Reload() return false end
 function SWEP:Holster() return true  end
 function SWEP:ShouldDropOnDie() return false end
 
-local weaponSelectionColor = Color( 255, 220, 0, 255 )
-function SWEP:DrawWeaponSelection( x, y, w, t, a )
+local weaponSelectionColor = Color(255, 220, 0, 255)
+function SWEP:DrawWeaponSelection(x, y, w, t, a)
 	weaponSelectionColor.a = a
-	draw.SimpleText( "C", "creditslogo", x + w / 2, y, weaponSelectionColor, TEXT_ALIGN_CENTER )
-
-	baseClass.PrintWeaponInfo( self, x + w + 20, y + t * 0.95, alpha )
+	draw.SimpleText("C", "creditslogo", x + w / 2, y, weaponSelectionColor, TEXT_ALIGN_CENTER)
+	baseClass.PrintWeaponInfo(self, x + w + 20, y + t * 0.95, alpha)
 end
 
 function SWEP:Initialize()
 	if self.SetHoldType then
-		self:SetHoldType( "normal" )
+		self:SetHoldType("normal")
 	else
-		self:SetWeaponHoldType( "normal" )
+		self:SetWeaponHoldType("normal")
 	end
 
-	self:DrawShadow( false )
-	self:SetSequence( "ragdoll" ) -- paired with SWEP.ViewModel = "models/weapons/c_arms.mdl" to make the arms invisible
+	-- Paired with SWEP.ViewModel = "models/weapons/c_arms.mdl" to make the arms invisible
+	self:SetSequence("ragdoll")
+	self:DrawShadow(false)
 end
 
 function SWEP:OnDrop()
@@ -74,8 +70,9 @@ end
 
 function SWEP:SecondaryAttack()
 	if not IsFirstTimePredicted() then return end
+	if not self.Owner:IsWalking() or not self.Owner:Crouching() then return end
 	self.DrawCrosshair = not self.DrawCrosshair
-	self:SetNextSecondaryFire( CurTime() + 0.3 )
+	self:SetNextSecondaryFire(CurTime() + 0.3)
 end
 
-weapons.Register( SWEP, "none", true )
+weapons.Register(SWEP, "hands", true)
