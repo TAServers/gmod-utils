@@ -10,7 +10,7 @@ local cleanupCmd = ulx.command(
 			"#A cleaned up disconnected players props"
 		)
 	end,
-	"!cleanupdiscon"
+	{ "!cleanupdiscon", "!cleanupdc" }
 )
 cleanupCmd:defaultAccess(ULib.ACCESS_ADMIN)
 cleanupCmd:help("Removes all props owned by disconnected players")
