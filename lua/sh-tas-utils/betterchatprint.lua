@@ -25,7 +25,7 @@ if SERVER then
 			if IsColor(v) then
 				size = size + COLOUR_CHANNEL_BITS * 3
 			else
-				size = size + #tostring(v) + NULL_TERMINATOR_BITS
+				size = size + #tostring(v) * 8 + NULL_TERMINATOR_BITS
 			end
 		end
 
