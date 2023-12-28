@@ -1,7 +1,7 @@
 local cleanRopes = ulx.command(
 	TASUtils.Category,
 	"ulx cleanropes",
-	function(calling_ply)
+	function(ply)
 		local count = 0
 		local ropes = ents.FindByClass("keyframe_rope")
 		for _, v in ipairs(ropes) do
@@ -11,7 +11,7 @@ local cleanRopes = ulx.command(
 			end
 		end
 
-		ulx.fancyLogAdmin(calling_ply, "#A cleaned up #i world ropes", count)
+		ulx.fancyLogAdmin(ply, "#A cleaned up #i world ropes", count)
 	end,
 	"!cleanropes"
 )
