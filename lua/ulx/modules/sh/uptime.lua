@@ -3,31 +3,29 @@ local function plural(value, noun)
 end
 
 local startTime = SysTime()
-local uptimeCommand = ulx.command(TASUtils.Category, "ulx uptime", function()
-	local time_data = string.FormattedTime(SysTime() - startTime)
-	local h, m, s = time_data.h, time_data.m, time_data.s
-
-	if h < 1 and m < 1 then
+local uptimeCommand = ulx.command("Chat", "ulx uptime", function()
+	local uptime = string.FormattedTime(SysTime() - startTime)
+	if uptime.h < 1 and uptime.m < 1 then
 		ulx.fancyLog(
 			"Server has been running for #i #s",
-			s,
-			plural(s, "second")
+			uptime.s,
+			plural(uptime.s, "second")
 		)
-	elseif h < 1 then
+	elseif uptime.h < 1 then
 		ulx.fancyLog(
 			"Server has been running for #i #s and #i #s",
-			m,
-			plural(m, "minute"),
-			s,
-			plural(s, "second")
+			uptime.m,
+			plural(uptime.m, "minute"),
+			uptime.s,
+			plural(uptime.s, "second")
 		)
 	else
 		ulx.fancyLog(
 			"Server has been running for #i #s and #i #s",
-			h,
-			plural(h, "hour"),
-			m,
-			plural(m, "minute")
+			uptime.h,
+			plural(uptime.h, "hour"),
+			uptime.m,
+			plural(uptime.m, "minute")
 		)
 	end
 end, "!uptime")
