@@ -2,9 +2,9 @@ local function plural(value, noun)
 	return value ~= 1 and noun .. "s" or noun
 end
 
-local startTime = SysTime()
+local startTime = CurTime()
 local uptimeCommand = ulx.command("Chat", "ulx uptime", function()
-	local uptime = string.FormattedTime(SysTime() - startTime)
+	local uptime = string.FormattedTime(CurTime() - startTime)
 	if uptime.h < 1 and uptime.m < 1 then
 		ulx.fancyLog(
 			"Server has been running for #i #s",
