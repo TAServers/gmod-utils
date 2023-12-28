@@ -3,7 +3,7 @@ local function plural(value, noun)
 end
 
 local startTime = SysTime()
-local uptimeCommand = ulx.command("Chat", "ulx uptime", function()
+local uptimeCommand = ulx.command(TASUtils.Category, "ulx uptime", function()
 	local time_data = string.FormattedTime(SysTime() - startTime)
 	local h, m, s = time_data.h, time_data.m, time_data.s
 
